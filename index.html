@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Lanka Lap 2026 — Sash Jayasinghe</title>
-  <meta name="description" content="On July 1, 2026, Sash Jayasinghe runs 1,400km around Sri Lanka's coastline. 30 days. Nobody has done this." />
+  <meta name="description" content="On July 1, 2026, Sash Jayasinghe runs 1,400km around Sri Lanka's coastline. Follow it from day one." />
   <meta property="og:title" content="Lanka Lap 2026 — Sash Jayasinghe" />
-  <meta property="og:description" content="On July 1, I run 1,400km around Sri Lanka's coastline. 30 days. Nobody has done this. Follow it from the start." />
+  <meta property="og:description" content="On July 1, I run 1,400km around Sri Lanka's coastline. 30 days. Nobody has done this." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
 
@@ -25,23 +25,29 @@
       --green:   #006533;
       --orange:  #E87722;
       --white:   #F0EBE3;
-      --muted:   #9A9299;
-      --dim:     #1A141E;
+      --muted:   #7A7079;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100%; }
+    html {
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100%;
+    }
+
     body {
       background: var(--bg);
       color: var(--white);
       font-family: 'Source Sans 3', sans-serif;
-      font-weight: 400;
       -webkit-font-smoothing: antialiased;
     }
 
     /* Flag stripe */
-    .flag { display: flex; height: 3px; width: 100%; }
+    .flag {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; height: 3px;
+    }
     .flag s { display: block; }
     .flag s:nth-child(1) { background: var(--green);   flex: 1; }
     .flag s:nth-child(2) { background: var(--orange);  flex: 1; }
@@ -49,301 +55,274 @@
     .flag s:nth-child(4) { background: var(--orange);  flex: 1; }
     .flag s:nth-child(5) { background: var(--green);   flex: 1; }
 
-    /* Nav */
-    nav {
-      position: fixed; top: 3px; left: 0; right: 0; z-index: 100;
-      padding: 1rem 2rem;
-      display: flex; align-items: center; justify-content: space-between;
-      background: rgba(6,0,10,0.92);
-    }
-    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.28em; color: var(--saffron); }
-    .nav-cta {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--white); text-decoration: none;
-      opacity: 0.6; transition: opacity 0.2s;
-    }
-    .nav-cta:hover { opacity: 1; }
-
-    /* Sections */
-    section {
+    /* Slides */
+    .slide {
       scroll-snap-align: start;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 6rem 2rem 4rem;
     }
 
-    /* ── HERO */
-    #hero {
+    /* ── SLIDE 1: HOOK */
+    #hook {
       flex-direction: column;
       text-align: center;
-      background: radial-gradient(ellipse at 50% 55%, rgba(18,6,24,1) 0%, var(--bg) 70%);
+      padding: 5rem 2rem 4rem;
+      background: radial-gradient(ellipse at 50% 60%, rgba(20,6,30,1) 0%, var(--bg) 68%);
+      position: relative;
     }
 
     #island-wrap {
       position: relative;
-      width: min(200px, 44vw);
-      margin-bottom: 3rem;
+      width: min(160px, 38vw);
+      margin-bottom: 2.8rem;
     }
 
-    #ch1-text { opacity: 0; }
-    .hero-eyebrow {
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.32em;
-      text-transform: uppercase; color: var(--saffron); opacity: 0.8;
-      margin-bottom: 0.8rem;
-    }
-    .hero-headline {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(4rem, 16vw, 9rem);
-      line-height: 0.85; letter-spacing: 0.02em;
-      margin-bottom: 1rem;
-    }
-    .hero-sub {
-      font-size: clamp(0.9rem, 2vw, 1.05rem);
-      color: var(--muted); letter-spacing: 0.06em;
-      font-weight: 600;
-    }
-
-    /* Countdown */
     #cd-strip {
-      position: absolute; bottom: -2.4rem; left: 50%;
+      position: absolute;
+      bottom: -2.2rem; left: 50%;
       transform: translateX(-50%);
       display: flex; align-items: baseline; gap: 0.3rem;
       white-space: nowrap; opacity: 0;
     }
-    .cd-n { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--white); min-width: 2ch; text-align: center; font-variant-numeric: tabular-nums; }
-    .cd-l { font-size: 0.42rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-    .cd-dot { font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem; color: var(--crimson); opacity: 0.6; }
-
-    /* ── STORY */
-    #story {
-      max-width: 680px;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-    }
-
-    .story-block { margin-bottom: 2.5rem; opacity: 0; transform: translateY(24px); }
-    .eyebrow {
-      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.32em;
-      text-transform: uppercase; color: var(--crimson); opacity: 0.7;
-      margin-bottom: 1.2rem;
-    }
-    .story-p {
-      font-size: clamp(1.05rem, 2.4vw, 1.22rem);
-      font-weight: 600; color: var(--white);
-      line-height: 1.85; margin-bottom: 1.4rem;
-    }
-    .story-accent {
+    .cd-n {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
-      line-height: 1; color: var(--white);
-      letter-spacing: 0.03em; margin: 1.2rem 0;
-    }
-    .story-accent span { color: var(--crimson); }
-
-    /* ── PHOTO */
-    #photo-slide {
-      padding: 0;
-      position: relative;
-    }
-    .photo-full {
-      position: absolute; inset: 0;
-      background: var(--dim);
-    }
-    .photo-full img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center top;
-      display: block;
-    }
-    .photo-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to right, rgba(6,0,10,0.88) 0%, rgba(6,0,10,0.4) 55%, rgba(6,0,10,0.1) 100%);
-    }
-    @media (max-width: 600px) {
-      .photo-overlay {
-        background: linear-gradient(to top, rgba(6,0,10,0.95) 0%, rgba(6,0,10,0.5) 55%, rgba(6,0,10,0.1) 100%);
-      }
-    }
-    .photo-text {
-      position: relative; z-index: 2;
-      max-width: 480px;
-      padding: 2rem;
-      opacity: 0; transform: translateY(24px);
-    }
-    @media (min-width: 601px) {
-      .photo-text { padding: 0 0 0 5vw; align-self: center; }
-    }
-
-    /* ── RUN */
-    #the-run {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      max-width: 720px;
-    }
-
-    .run-headline {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.4rem, 8vw, 5rem);
-      line-height: 0.9; letter-spacing: 0.02em;
-      margin-bottom: 2rem;
-      opacity: 0; transform: translateY(24px);
-    }
-    .run-headline span { color: var(--crimson); }
-
-    .stats {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      width: 100%; max-width: 540px;
-      border-top: 1px solid rgba(141,21,58,0.25);
-      border-bottom: 1px solid rgba(141,21,58,0.25);
-      padding: 2rem 0; margin: 0 auto 2.5rem;
-      opacity: 0; transform: translateY(20px);
-    }
-    .stat { text-align: center; padding: 0 1rem; }
-    .stat + .stat { border-left: 1px solid rgba(240,235,227,0.07); }
-    .stat-n {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.2rem, 6vw, 3.5rem);
-      line-height: 1; color: var(--saffron);
+      font-size: 1.2rem; color: var(--white);
+      min-width: 2ch; text-align: center;
       font-variant-numeric: tabular-nums;
     }
-    .stat-l {
-      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.26em;
-      text-transform: uppercase; color: var(--muted); margin-top: 0.3rem;
+    .cd-l {
+      font-size: 0.38rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .cd-dot {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.7rem; color: var(--crimson); opacity: 0.5;
     }
 
-    .run-body {
-      font-size: clamp(1rem, 2.2vw, 1.12rem);
-      font-weight: 600; color: var(--white);
-      line-height: 1.85; max-width: 520px;
-      opacity: 0; transform: translateY(20px);
+    #hook-text { opacity: 0; }
+
+    .hook-date {
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.36em; text-transform: uppercase;
+      color: var(--saffron); opacity: 0.85;
+      margin-bottom: 1rem;
     }
 
-    /* ── STAGES */
-    #stages {
-      flex-direction: column;
+    .hook-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4.5rem, 18vw, 10rem);
+      line-height: 0.82; letter-spacing: 0.01em;
+      margin-bottom: 1.4rem;
+    }
+
+    .hook-sub {
+      font-size: clamp(1rem, 2.4vw, 1.15rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.7;
+      max-width: 400px;
+      margin: 0 auto 0.6rem;
+    }
+
+    .hook-sub-muted {
+      font-size: clamp(0.82rem, 1.8vw, 0.92rem);
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted); opacity: 0;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .scroll-hint::after {
+      content: '';
+      display: block;
+      width: 1px; height: 28px;
+      background: linear-gradient(to bottom, var(--crimson), transparent);
+    }
+
+    /* ── SLIDE 2: STORY */
+    #story {
       align-items: flex-start;
-      max-width: 680px;
+      padding: 6rem 2rem 5rem;
     }
 
-    .stages-header {
-      margin-bottom: 3rem;
-      opacity: 0; transform: translateY(24px);
-    }
-    .stage-item {
-      display: flex; gap: 2rem; align-items: flex-start;
-      padding: 1.8rem 0;
-      border-bottom: 1px solid rgba(240,235,227,0.07);
-      opacity: 0; transform: translateY(20px);
-    }
-    .stage-item:first-of-type { border-top: 1px solid rgba(240,235,227,0.07); }
-    .stage-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2rem; color: var(--crimson); opacity: 0.4;
-      flex-shrink: 0; width: 2.4rem; line-height: 1;
-    }
-    .stage-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.3rem; letter-spacing: 0.06em;
-      color: var(--white); margin-bottom: 0.4rem;
-    }
-    .stage-desc {
-      font-size: clamp(0.9rem, 2vw, 1rem);
-      font-weight: 600; color: var(--muted); line-height: 1.75;
+    .story-inner {
+      max-width: 620px;
+      width: 100%;
+      margin: 0 auto;
     }
 
-    .stages-closer {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      letter-spacing: 0.04em; line-height: 1.1;
-      margin-top: 2.5rem; padding-left: 1rem;
-      border-left: 2px solid var(--crimson);
-      opacity: 0; transform: translateY(20px);
+    .story-section {
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      transform: translateY(28px);
     }
 
-    /* ── JOIN */
-    #join {
+    .eyebrow {
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.34em; text-transform: uppercase;
+      color: var(--crimson); opacity: 0.65;
+      margin-bottom: 1.6rem;
+    }
+
+    .line {
+      font-size: clamp(1.05rem, 2.6vw, 1.22rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.8;
+      display: block;
+      margin-bottom: 1.3rem;
+    }
+
+    .line-accent {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5.5vw, 3rem);
+      line-height: 1;
+      color: var(--white);
+      letter-spacing: 0.03em;
+      display: block;
+      margin: 1.8rem 0;
+    }
+    .line-accent span { color: var(--crimson); }
+
+    .line-gold {
+      color: var(--saffron);
+      font-weight: 700;
+    }
+
+    /* ── SLIDE 3: CTA */
+    #cta {
       flex-direction: column;
       text-align: center;
-      background: radial-gradient(ellipse at 50% 100%, rgba(141,21,58,0.08) 0%, transparent 60%);
+      padding: 5rem 2rem 4rem;
+      background: radial-gradient(ellipse at 50% 100%, rgba(141,21,58,0.1) 0%, transparent 65%);
     }
 
-    .join-wrap {
-      max-width: 480px; width: 100%;
-      opacity: 0; transform: translateY(24px);
+    .cta-inner {
+      max-width: 440px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(24px);
     }
-    .join-headline {
+
+    .cta-headline {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.2rem, 6vw, 3.5rem);
-      letter-spacing: 0.06em; margin-bottom: 1rem;
+      font-size: clamp(2.8rem, 8vw, 4.5rem);
+      letter-spacing: 0.05em;
+      line-height: 0.92;
+      margin-bottom: 1.6rem;
     }
-    .join-sub {
-      font-size: 1rem; font-weight: 600;
-      color: var(--muted); line-height: 1.7;
-      margin-bottom: 0.3rem;
+
+    .cta-sub {
+      font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 0.5rem;
     }
 
     .email-row {
-      display: flex; margin-top: 2rem;
+      display: flex;
+      margin-top: 2rem;
       border: 1px solid rgba(141,21,58,0.45);
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .email-row:focus-within {
       border-color: var(--saffron);
-      box-shadow: 0 0 0 3px rgba(245,168,0,0.12);
+      box-shadow: 0 0 0 3px rgba(245,168,0,0.1);
     }
     .email-input {
-      flex: 1; background: rgba(255,255,255,0.03);
-      border: none; color: var(--white);
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border: none;
+      color: var(--white);
       font-family: 'Source Sans 3', sans-serif;
       font-size: 0.95rem; font-weight: 600;
-      padding: 1rem 1.2rem; outline: none;
+      padding: 1rem 1.2rem;
+      outline: none;
     }
     .email-input::placeholder { color: rgba(240,235,227,0.2); }
+
     .btn-join {
-      background: var(--crimson); border: none; color: var(--white);
-      font-family: 'Bebas Neue', sans-serif; font-size: 1rem;
-      letter-spacing: 0.18em; padding: 0 1.8rem;
-      cursor: pointer; white-space: nowrap; transition: background 0.2s;
+      background: var(--crimson);
+      border: none;
+      color: var(--white);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.18em;
+      padding: 0 1.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
     }
     .btn-join:hover { background: #A8193F; }
-    .btn-join:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
 
     .form-note {
-      font-size: 0.7rem; font-weight: 600; color: var(--muted);
-      letter-spacing: 0.06em; margin-top: 0.9rem;
+      font-size: 0.68rem; font-weight: 600;
+      color: var(--muted); letter-spacing: 0.06em;
+      margin-top: 1rem;
     }
+
     .givestar {
-      margin-top: 1.2rem; font-size: 0.72rem;
-      font-weight: 700; letter-spacing: 0.08em; color: var(--muted);
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(240,235,227,0.06);
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--muted);
     }
-    .givestar a { color: var(--crimson); text-decoration: none; transition: color 0.2s; }
+    .givestar a {
+      color: var(--crimson);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
     .givestar a:hover { color: var(--saffron); }
 
-    /* Footer */
-    footer {
-      text-align: center; padding: 2rem;
-      font-size: 0.65rem; font-weight: 700;
+    .social-row {
+      margin-top: 1.4rem;
+      display: flex; gap: 1.5rem;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .social-row a {
+      font-size: 0.68rem; font-weight: 700;
       letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); opacity: 0.4;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .social-row a:hover { color: var(--saffron); }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); opacity: 0.3;
       scroll-snap-align: none;
+    }
+
+    @media (max-width: 480px) {
+      #story { padding: 5rem 1.5rem 4rem; }
+      .email-input { font-size: 0.9rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="flag" style="position:fixed;top:0;left:0;right:0;z-index:200;"><s></s><s></s><s></s><s></s><s></s></div>
-
-  <nav>
-    <span class="nav-logo">Lanka Lap</span>
-    <a href="#join" class="nav-cta">Follow the run →</a>
-  </nav>
+  <div class="flag"><s></s><s></s><s></s><s></s><s></s></div>
 
 
-  <!-- HERO -->
-  <section id="hero">
+  <!-- SLIDE 1: HOOK -->
+  <section class="slide" id="hook">
 
     <div id="island-wrap" aria-hidden="true">
       <svg viewBox="0 0 180 256" fill="none" style="width:100%;height:auto;display:block;">
@@ -355,28 +334,20 @@
           </radialGradient>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="b1"/>
-            <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b2"/>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="8"   result="b2"/>
             <feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
           <filter id="dotglow" x="-150%" y="-150%" width="400%" height="400%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="2.5"/>
           </filter>
         </defs>
-
-        <!-- Island body -->
         <path d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z" fill="url(#g-t)"/>
-
-        <!-- Coastline path with glow -->
         <path id="coast-path"
           d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"
           stroke="#8D153A" stroke-width="1.8" fill="none" filter="url(#glow)"/>
-
-        <!-- Colombo ping -->
         <circle id="colombo-ring" cx="20" cy="186" r="7" fill="none" stroke="rgba(245,168,0,0.5)" stroke-width="0.8"/>
         <circle cx="20" cy="186" r="2.2" fill="rgba(245,168,0,0.8)"/>
-        <text x="27" y="190" font-family="'Source Sans 3',sans-serif" font-size="5" font-weight="700" fill="rgba(245,168,0,0.6)" letter-spacing="0.05em">COLOMBO</text>
-
-        <!-- Running dot -->
+        <text x="27" y="190" font-family="'Source Sans 3',sans-serif" font-size="5" font-weight="700" fill="rgba(245,168,0,0.55)" letter-spacing="0.05em">COLOMBO</text>
         <circle id="run-dot" cx="20" cy="186" r="3.5" fill="var(--saffron)" opacity="0" filter="url(#dotglow)"/>
       </svg>
 
@@ -391,154 +362,90 @@
       </div>
     </div>
 
-    <div id="ch1-text">
-      <p class="hero-eyebrow">July 1, 2026 · Sri Lanka</p>
-      <h1 class="hero-headline">1,400<span style="color:var(--crimson);">KM</span></h1>
-      <p class="hero-sub" style="color:var(--white);font-size:clamp(1rem,2.4vw,1.2rem);letter-spacing:0.04em;">Creating the voice I wish I had.</p>
+    <div id="hook-text">
+      <p class="hook-date">July 1, 2026 · Sri Lanka</p>
+      <h1 class="hook-headline">1,400<span style="color:var(--crimson);">KM</span></h1>
+      <p class="hook-sub">I'm running a full lap of Sri Lanka.</p>
+      <p class="hook-sub-muted">Nobody has done this. Here's why I am.</p>
     </div>
+
+    <div class="scroll-hint" id="scroll-hint">Read the story</div>
 
   </section>
 
 
-  <!-- STORY -->
-  <section id="story">
-    <div style="width:100%;">
+  <!-- SLIDE 2: STORY -->
+  <section class="slide" id="story">
+    <div class="story-inner">
 
-      <div class="story-block">
+      <div class="story-section">
         <p class="eyebrow">Who I am</p>
-        <p class="story-p">Born in Rome to Sri Lankan parents.</p>
-        <p class="story-p">Moved to London when I was thirteen.</p>
-        <p class="story-p">It was difficult. Strange.</p>
-        <p class="story-p">I had to become the leader in my family overnight.</p>
-        <p class="story-p">Documents. Visas. Everything.</p>
-        <p class="story-p">I watched how much my parents sacrificed.</p>
-        <p class="story-p">I started trying things.</p>
-        <p class="story-p">Got scammed. Got depressed. Nearly gave up on everything.</p>
-        <p class="story-p">I started drinking just to fit in.</p>
+        <span class="line">Born in Rome to Sri Lankan parents.</span>
+        <span class="line">Moved to London when I was thirteen.</span>
+        <span class="line">It was difficult. Strange.</span>
+        <span class="line">I had to become the leader in my family overnight.</span>
+        <span class="line">Documents. Visas. Everything.</span>
+        <span class="line">I watched how much my parents sacrificed.</span>
       </div>
 
-      <div class="story-block">
-        <p class="eyebrow">The wake up</p>
-        <p class="story-p">When I was 17, I visited where my parents grew up.</p>
-        <p class="story-p">I call it my wake up.</p>
-        <p class="story-p">I came back and said: say yes to everything.</p>
-        <p class="story-p">See what happens.</p>
-        <div class="story-accent">Three years later<br/>I'm still<br/><span>saying yes.</span></div>
-        <p class="story-p">Now I document my journey for the people who were where I was.</p>
-        <p class="story-p">Lost. No clue what they want. Afraid to try.</p>
-        <p class="story-p">My mission is simple.</p>
-        <p class="story-p" style="color:var(--saffron);font-weight:700;">Create the voice I wish I had.</p>
+      <div class="story-section">
+        <p class="eyebrow">The hard part</p>
+        <span class="line">I started trying things.</span>
+        <span class="line">Got scammed. Got depressed. Nearly gave up on everything.</span>
+        <span class="line">I started drinking just to fit in.</span>
+        <span class="line-accent">Then at 17 I visited<br/>where my parents<br/><span>grew up.</span></span>
+        <span class="line">I call it my wake up.</span>
+        <span class="line">I came back and said: say yes to everything.</span>
+        <span class="line">See what happens.</span>
+      </div>
+
+      <div class="story-section">
+        <p class="eyebrow">The mission</p>
+        <span class="line">Three years later I'm still saying yes.</span>
+        <span class="line">Now I document my journey for the people who were where I was.</span>
+        <span class="line">Lost. No clue what they want. Afraid to try.</span>
+        <span class="line">My mission is simple.</span>
+        <span class="line line-gold">Create the voice I wish I had.</span>
+        <span class="line">The run is how I get the world to pay attention.</span>
       </div>
 
     </div>
   </section>
 
 
-  <!-- PHOTO -->
-  <section id="photo-slide">
-    <div class="photo-full">
-      <img src="images/sash-flag.jpg" alt="Sash holding the Sri Lanka flag" loading="lazy"/>
-    </div>
-    <div class="photo-overlay"></div>
-    <div class="photo-text">
-      <p class="eyebrow" style="color:var(--saffron);">July 1, 2026</p>
-      <div class="story-accent" style="font-size:clamp(2rem,7vw,4rem);margin-bottom:1.2rem;">I needed the<br/>world to<br/><span>pay attention.</span></div>
-      <p class="story-p">So I decided to run a full lap of the island.</p>
-      <p class="story-p">1,400km. 30 days. Nobody has done this.</p>
-    </div>
-  </section>
+  <!-- SLIDE 3: CTA -->
+  <section class="slide" id="cta">
+    <div class="cta-inner">
 
-
-  <!-- THE RUN -->
-  <section id="the-run">
-
-    <h2 class="run-headline">The run<br/><span>by the numbers.</span></h2>
-
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-n" data-count="1400">0</div>
-        <div class="stat-l">Kilometres</div>
-      </div>
-      <div class="stat">
-        <div class="stat-n" data-count="30">0</div>
-        <div class="stat-l">Days</div>
-      </div>
-      <div class="stat">
-        <div class="stat-n" data-count="45">0</div>
-        <div class="stat-l">KM / Day</div>
-      </div>
-    </div>
-
-    <p class="run-body">More than a marathon. Every single day. For 30 days straight. Every kilometre documented. The bad days too.</p>
-
-  </section>
-
-
-  <!-- STAGES -->
-  <section id="stages">
-
-    <div class="stages-header">
-      <p class="eyebrow">What this starts</p>
-      <h2 class="story-accent" style="opacity:1;transform:none;">The run is the beginning.<br/><span>Not the goal.</span></h2>
-    </div>
-
-    <div class="stage-item">
-      <div class="stage-num">01</div>
-      <div>
-        <div class="stage-title">Youth Running Clubs</div>
-        <p class="stage-desc">5 clubs launched while running. With Nūl, they become permanent infrastructure — not one-off events.</p>
-      </div>
-    </div>
-
-    <div class="stage-item">
-      <div class="stage-num">02</div>
-      <div>
-        <div class="stage-title">Retreats · with Nūl</div>
-        <p class="stage-desc">For Sri Lankan diaspora. The room I never found — on Nūl's land in Sri Lanka.</p>
-      </div>
-    </div>
-
-    <div class="stage-item">
-      <div class="stage-num">03</div>
-      <div>
-        <div class="stage-title">4Lanka Marathon</div>
-        <p class="stage-desc">The run becomes an annual marathon. Sri Lanka and the diaspora — on the same finish line.</p>
-      </div>
-    </div>
-
-    <p class="stages-closer">Not inspiration.<br/><span style="color:var(--saffron);">Infrastructure.</span></p>
-
-  </section>
-
-
-  <!-- JOIN -->
-  <section id="join">
-    <div class="join-wrap">
-      <h2 class="join-headline">Follow it from<br/>the start.</h2>
-      <p class="join-sub">I'll write from training, from the road.</p>
-      <p class="join-sub">Everything from day one. No noise.</p>
+      <h2 class="cta-headline">Follow it<br/>from day one.</h2>
+      <p class="cta-sub">I'll write from training, from the road.</p>
+      <p class="cta-sub">The real stuff. Nothing filtered.</p>
 
       <form id="email-form">
         <div class="email-row">
-          <label for="email-in" style="position:absolute;opacity:0;pointer-events:none;">Email</label>
+          <label for="email-in" style="position:absolute;opacity:0;pointer-events:none;">Email address</label>
           <input id="email-in" class="email-input" type="email" name="email"
                  placeholder="your@email.com" required autocomplete="email"/>
           <button type="submit" class="btn-join">COUNT ME IN</button>
         </div>
       </form>
 
-      <p class="form-note">I'll write from training, from the road. Nothing else.</p>
-      <p class="givestar">Or <a href="https://givestar.io/gs/the-voice-i-wish-i-had-a-lap-of-sri-lanka" target="_blank" rel="noopener noreferrer">support the run directly →</a></p>
+      <p class="form-note">No spam. Just the run.</p>
 
-      <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid rgba(240,235,227,0.06);display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;">
-        <a href="https://instagram.com/sash.jm" target="_blank" rel="noopener noreferrer" style="font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--saffron)'" onmouseout="this.style.color='var(--muted)'">@sash.jm</a>
-        <a href="mailto:sashj.enquiry@yahoo.com" style="font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--saffron)'" onmouseout="this.style.color='var(--muted)'">Email</a>
-        <span style="font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);opacity:0.4;">In partnership with Nūl</span>
+      <div class="givestar">
+        Or <a href="https://givestar.io/gs/the-voice-i-wish-i-had-a-lap-of-sri-lanka" target="_blank" rel="noopener noreferrer">support the run directly →</a>
       </div>
+
+      <div class="social-row">
+        <a href="https://instagram.com/sash.jm" target="_blank" rel="noopener noreferrer">@sash.jm</a>
+        <a href="mailto:sashj.enquiry@yahoo.com">Email Sash</a>
+      </div>
+
     </div>
   </section>
 
   <footer>© 2026 Sash Jayasinghe · Lanka Lap</footer>
+
 
   <script>
     gsap.registerPlugin(MotionPathPlugin);
@@ -576,47 +483,32 @@
         },
         onComplete: () => gsap.to(runDot, { attr:{ r:5 }, opacity:0.7, duration:0.8, repeat:-1, yoyo:true, ease:'sine.inOut' })
       }, 0.5)
-      .fromTo('#cd-strip', { opacity:0, y:6 }, { opacity:1, y:0, duration:0.4 }, 0.8)
-      .fromTo('#ch1-text', { opacity:0, y:18 }, { opacity:1, y:0, duration:0.55 }, 1.3);
+      .fromTo('#cd-strip',    { opacity:0, y:6  }, { opacity:1, y:0, duration:0.4 }, 0.8)
+      .fromTo('#hook-text',   { opacity:0, y:18 }, { opacity:1, y:0, duration:0.55 }, 1.2)
+      .fromTo('#scroll-hint', { opacity:0 },       { opacity:1, duration:0.5 }, 2.0);
 
-    /* Scroll reveals */
+    /* Story section reveals */
     const io = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-        const el = entry.target;
-
-        if (el.classList.contains('story-block') || el.classList.contains('stage-item') ||
-            el.classList.contains('run-body') || el.classList.contains('stages-header') ||
-            el.classList.contains('stages-closer') || el.classList.contains('join-wrap') ||
-            el.classList.contains('photo-text')) {
-          gsap.to(el, { opacity:1, y:0, duration:0.75, ease:'power3.out' });
-          io.unobserve(el);
-        }
-
-        if (el.classList.contains('run-headline') || el.classList.contains('stats')) {
-          gsap.to(el, { opacity:1, y:0, duration:0.7, ease:'power3.out' });
-          if (el.classList.contains('stats')) {
-            document.querySelectorAll('[data-count]').forEach((num, i) => {
-              const target = parseInt(num.dataset.count);
-              const obj = { v:0 };
-              gsap.to(obj, { v:target, duration:1.5, delay:0.2 + i*0.1, ease:'power2.out',
-                onUpdate: () => { num.textContent = Math.round(obj.v).toLocaleString(); }
-              });
-            });
-          }
-          io.unobserve(el);
-        }
+        gsap.to(entry.target, { opacity:1, y:0, duration:0.8, ease:'power3.out' });
+        io.unobserve(entry.target);
       });
-    }, { threshold: 0.25 });
+    }, { threshold: 0.15 });
 
-    document.querySelectorAll('.story-block, .stage-item, .run-headline, .stats, .run-body, .stages-header, .stages-closer, .join-wrap, .photo-text')
-      .forEach(el => io.observe(el));
-
-    /* Nav smooth scroll */
-    document.querySelector('.nav-cta').addEventListener('click', e => {
-      e.preventDefault();
-      document.getElementById('join').scrollIntoView({ behavior:'smooth' });
+    document.querySelectorAll('.story-section').forEach((el, i) => {
+      el.style.transitionDelay = `${i * 0.1}s`;
+      io.observe(el);
     });
+
+    const ctaIO = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        gsap.to('.cta-inner', { opacity:1, y:0, duration:0.8, ease:'power3.out' });
+        ctaIO.unobserve(entry.target);
+      });
+    }, { threshold: 0.2 });
+    ctaIO.observe(document.querySelector('.cta-inner'));
 
     /* Kit form */
     document.getElementById('email-form').addEventListener('submit', async e => {
@@ -632,9 +524,9 @@
         });
         const data = await res.json();
         if (res.ok && data.subscription) {
-          document.querySelector('.join-wrap').innerHTML =
-            '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;letter-spacing:0.12em;color:var(--saffron);margin-bottom:0.5rem;">YOU\'RE IN.</div>' +
-            '<p style="font-size:1rem;font-weight:600;color:var(--white);line-height:1.7;">I\'ll write from training, from the road.<br/>Everything from day one.</p>';
+          document.querySelector('.cta-inner').innerHTML =
+            '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2.4rem;letter-spacing:0.12em;color:var(--saffron);margin-bottom:0.8rem;">YOU\'RE IN.</div>' +
+            '<p style="font-size:1rem;font-weight:600;color:var(--white);line-height:1.8;">I\'ll write from training, from the road.<br/>Everything from day one.</p>';
         } else {
           btn.textContent = 'TRY AGAIN'; btn.disabled = false;
         }
