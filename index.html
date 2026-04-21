@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lanka Lap 2026 — Running Sri Lanka's entire coastline</title>
+  <meta name="description" content="Born in Rome to Sri Lankan parents. In Italy: the brown kid. In London: a coconut. On July 1, I run 1,400km around Sri Lanka's coastline. Nobody has done this." />
+  <meta property="og:title" content="Lanka Lap 2026 — Running Sri Lanka's entire coastline" />
+  <meta property="og:description" content="I'm Sash. Born in Rome to Sri Lankan parents. Moved to London at 13. Spent years learning to fit in. That skill didn't transfer. On July 1, I run 1,400km around Sri Lanka's coastline — alone. 30 days. Nobody has done this." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Lanka Lap 2026 — Running Sri Lanka's entire coastline" />
+  <meta name="twitter:description" content="I'm Sash. On July 1 I run 1,400km around Sri Lanka's coastline — alone. 30 days. Nobody has done this." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='1' fill='%238D153A' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+
+  <style>
+    /* ── IMAGES TO ADD: website/images/
+       sash-london.jpg       → Hungerford Bridge photo
+       sash-young-beach.jpg  → Young Sash on beach, orange shirt
+       sash-young-indoor.jpg → Young Sash inside, yellow shirt
+       parents.jpg           → Parents 2010 photo
+       family.jpg            → Baby Sash with both parents
+       sash-speaking.jpg     → Sash at mic, Sri Lanka cricket jersey
+       sash-flag.jpg         → Sash holding Sri Lanka flag after run
+    ── */
+
+    :root {
+      --bg:      #06000A;
+      --crimson: #8D153A;
+      --saffron: #F5A800;
+      --green:   #006533;
+      --orange:  #E87722;
+      --white:   #F0EBE3;
+      --muted:   #7E7882;
+      --dim:     #1E1820;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%; width: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Grain overlay — using CSS noise, no SVG filter */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 900;
+      opacity: 0.04;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVBO0/AAAACHRSTlMAgICAgICAgBeFGa0AAAAuSURBVDjLY2AYBUMHGBgY/v8nIHVgYGAYGBgYGBgYGBgYGBgYGBgYGBgYGBgYAAfoBAABnf4aAAAAAElFTkSuQmCC");
+    }
+
+    /* Flag stripe */
+    .flag { display: flex; height: 4px; width: 100%; }
+    .flag s { display: block; }
+    .flag s:nth-child(1) { background: var(--green);   flex: 1; }
+    .flag s:nth-child(2) { background: var(--orange);  flex: 1; }
+    .flag s:nth-child(3) { background: var(--crimson); flex: 5; }
+    .flag s:nth-child(4) { background: var(--orange);  flex: 1; }
+    .flag s:nth-child(5) { background: var(--green);   flex: 1; }
+
+    .d { font-family: 'Bebas Neue', sans-serif; }
+
+    /* ── NAV */
+    nav {
+      position: fixed; top: 4px; left: 0; right: 0; z-index: 800;
+      padding: 0.85rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(6,0,10,0.88);
+    }
+    nav a { transition: opacity 0.2s; }
+    nav a:focus-visible { outline: 2px solid var(--saffron); outline-offset: 4px; opacity: 1; }
+
+    /* ── SLIDE CONTAINER — horizontal, fixed fullscreen */
+    #slides {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      flex-direction: row;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    #slides::-webkit-scrollbar { display: none; }
+
+    /* ── PROGRESS DOTS — bottom center */
+    #pg-dots {
+      position: fixed;
+      bottom: 1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: row;
+      gap: 0.55rem;
+      z-index: 700;
+    }
+    .pg-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(240,235,227,0.18);
+      border: none; padding: 6px;
+      background-clip: content-box;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .pg-dot.active {
+      background: var(--crimson);
+      background-clip: content-box;
+      transform: scale(1.5);
+    }
+
+    /* ── SHARED SLIDE */
+    .ch {
+      position: relative;
+      flex-shrink: 0;
+      width: 100vw;
+      height: 100%;
+      scroll-snap-align: start;
+      overflow: hidden;
+    }
+
+    /* Stages slide — allow vertical scroll within */
+    .ch-tall {
+      overflow-y: auto;
+    }
+
+    /* Reveal — fires on slide entry */
+    .reveal { opacity: 0; transform: translateY(28px); }
+
+    .body-eyebrow {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--crimson); opacity: 0.75;
+      margin-bottom: 1.4rem;
+    }
+    .body-p {
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      font-weight: 600; color: var(--white);
+      line-height: 1.82; margin-bottom: 0.55rem;
+    }
+    .body-strong {
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      font-weight: 700; color: var(--white);
+      line-height: 1.6; margin-bottom: 0.55rem;
+    }
+    .body-lead {
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      font-weight: 700; color: var(--white);
+      line-height: 1.4; margin-bottom: 1rem;
+    }
+
+    /* ── SLIDE ARROW HINT */
+    .slide-hint {
+      position: absolute; bottom: 3rem; right: 2rem;
+      display: flex; flex-direction: row; align-items: center; gap: 0.5rem;
+      opacity: 0;
+      animation: nudge 2.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .slide-hint span { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
+    .slide-hint svg { opacity: 0.4; }
+    @keyframes nudge {
+      0%,100% { transform: translateX(0); }
+      50%      { transform: translateX(5px); }
+    }
+    @media (prefers-reduced-motion: reduce) { .slide-hint { animation: none; } }
+
+
+    /* ══════════════════════════════════════
+       SLIDE 1 — THE ISLAND
+    ══════════════════════════════════════ */
+    #ch-island {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 5rem 1.5rem 4rem;
+      background: radial-gradient(ellipse at 50% 42%, rgba(22,8,28,1) 0%, var(--bg) 68%);
+    }
+
+    #island-wrap {
+      position: relative;
+      width: min(240px, 52vw);
+      flex-shrink: 0;
+      margin-bottom: 3.5rem;
+      isolation: isolate;
+    }
+    #island-wrap::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200%; height: 220%;
+      background: radial-gradient(ellipse, rgba(141,21,58,0.18) 0%, rgba(232,119,34,0.04) 45%, transparent 70%);
+      pointer-events: none; z-index: -1;
+    }
+
+    /* Countdown */
+    #cd-strip {
+      position: absolute; bottom: -2.8rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.3rem; white-space: nowrap; opacity: 0;
+    }
+    #cd-label-top { font-size: 0.48rem; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--crimson); opacity: 0.7; }
+    #cd-numbers { display: flex; align-items: baseline; gap: 0.32rem; }
+    .cd-n { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.1rem, 3.2vw, 1.6rem); line-height: 1; color: var(--white); min-width: 2ch; text-align: center; font-variant-numeric: tabular-nums; }
+    .cd-l { font-size: 0.44rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); padding-bottom: 2px; }
+    .cd-dot { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; color: var(--crimson); opacity: 0.5; align-self: flex-start; }
+
+    #ch1-text { text-align: center; opacity: 0; }
+    #ch1-eyebrow { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--saffron); opacity: 0.75; margin-bottom: 0.6rem; }
+    #ch1-headline { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.8rem, 14vw, 8rem); line-height: 0.88; letter-spacing: 0.02em; margin-bottom: 0.5rem; }
+    #ch1-sub { font-size: clamp(0.82rem, 1.8vw, 0.92rem); color: var(--muted); letter-spacing: 0.08em; }
+
+
+    /* ══════════════════════════════════════
+       SLIDE 2 — THE PERSON
+    ══════════════════════════════════════ */
+    #ch-person {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 769px) {
+      #ch-person { grid-template-columns: 52% 48%; }
+    }
+
+    .person-photo {
+      background: var(--dim);
+      overflow: hidden;
+      height: 55vw;
+      max-height: 50svh;
+      position: relative;
+    }
+    @media (min-width: 769px) {
+      .person-photo { height: 100svh; max-height: none; }
+      .person-photo::after {
+        content: '';
+        position: absolute; top: 0; right: 0; bottom: 0; width: 35%;
+        background: linear-gradient(to right, transparent, var(--bg));
+        pointer-events: none;
+      }
+    }
+    .person-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+
+    .person-text {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+    @media (min-width: 769px) {
+      .person-text { padding: 4rem 5vw 4rem 1.5rem; }
+    }
+
+
+    /* ══════════════════════════════════════
+       SLIDE 3 — IN BETWEEN (childhood)
+    ══════════════════════════════════════ */
+    #ch-childhood {
+      padding: 5rem 1.5rem 3rem;
+      display: flex; flex-direction: column; justify-content: center; gap: 3rem;
+    }
+    @media (min-width: 769px) {
+      #ch-childhood {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem; padding: 5rem 5vw;
+        align-items: center;
+      }
+    }
+
+    .childhood-text { order: 1; }
+    .childhood-photos { order: 2; display: flex; gap: 1.2rem; align-items: flex-start; padding: 1rem 0; }
+
+    @media (min-width: 769px) {
+      .childhood-text { order: 2; }
+      .childhood-photos { order: 1; }
+    }
+
+    /* Physical photo print treatment */
+    .old-photo {
+      background: #EDE5D5;
+      padding: 0.6rem 0.6rem 2rem;
+      box-shadow: 0 6px 28px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.3);
+      flex: 1;
+    }
+    .old-photo:nth-child(1) { transform: rotate(-2.8deg) translateY(8px); }
+    .old-photo:nth-child(2) { transform: rotate(2deg) translateY(-6px); }
+    .old-photo img { width: 100%; height: auto; display: block; filter: saturate(0.82); }
+
+
+    /* ══════════════════════════════════════
+       SLIDE 4 — MY PARENTS
+    ══════════════════════════════════════ */
+    #ch-parents {
+      padding: 5rem 1.5rem 3.5rem;
+      display: flex; flex-direction: column; justify-content: center; gap: 3rem;
+    }
+    @media (min-width: 769px) {
+      #ch-parents {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem; padding: 5rem 5vw;
+        align-items: center;
+      }
+    }
+
+    .parents-text { order: 1; }
+    .parents-photos { order: 2; position: relative; padding-bottom: 3rem; }
+    @media (min-width: 769px) {
+      .parents-text { order: 2; }
+      .parents-photos { order: 1; }
+    }
+
+    .parents-photo-main {
+      background: var(--dim);
+      overflow: hidden;
+      border: 1px solid rgba(240,235,227,0.06);
+    }
+    .parents-photo-main img { width: 100%; height: auto; display: block; }
+
+    .parents-photo-baby {
+      background: #EDE5D5;
+      padding: 0.5rem 0.5rem 1.4rem;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.65);
+      width: 46%;
+      position: absolute;
+      bottom: 0; right: -0.5rem;
+      transform: rotate(2.5deg);
+    }
+    @media (min-width: 769px) { .parents-photo-baby { right: -1.5rem; } }
+    .parents-photo-baby img { width: 100%; height: auto; display: block; filter: saturate(0.85); }
+
+
+    /* ══════════════════════════════════════
+       SLIDE 5 — PIVOT
+    ══════════════════════════════════════ */
+    #ch-pivot {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 5rem 1.5rem;
+    }
+    @media (min-width: 769px) { #ch-pivot { padding: 5rem 5vw; max-width: 860px; } }
+
+    #pivot-line {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 12vw, 7rem);
+      line-height: 0.88; letter-spacing: 0.015em;
+      color: var(--white); margin-bottom: 2.2rem;
+    }
+
+
+    /* ══════════════════════════════════════
+       SLIDE 6 — THE RUN (full bleed)
+    ══════════════════════════════════════ */
+    #ch-run {
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+
+    .run-photo {
+      position: absolute; inset: 0;
+      background: var(--dim); overflow: hidden;
+    }
+    .run-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 20%;
+      display: block;
+    }
+
+    .run-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(6,0,10,0.97) 0%, rgba(6,0,10,0.65) 40%, rgba(6,0,10,0.18) 100%);
+    }
+
+    .run-content {
+      position: relative; z-index: 10;
+      padding: 4rem 1.5rem 3rem;
+      max-width: 640px;
+    }
+    @media (min-width: 769px) { .run-content { padding: 4rem 5vw 4rem; } }
+
+    /* Stats row */
+    #stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid rgba(141,21,58,0.3);
+      border-bottom: 1px solid rgba(141,21,58,0.3);
+      padding: 1.5rem 0; margin: 2rem 0;
+      opacity: 0; transform: translateY(20px);
+    }
+    .s-item { text-align: center; padding: 0 0.4rem; border-right: 1px solid rgba(240,235,227,0.06); }
+    .s-item:last-child { border-right: none; }
+    .s-n { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1; color: var(--saffron); font-variant-numeric: tabular-nums; }
+    .s-l { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); margin-top: 0.35rem; }
+    .s-sub { font-size: 0.56rem; font-style: italic; color: var(--muted); opacity: 0.5; margin-top: 0.2rem; line-height: 1.4; }
+    @media (max-width: 480px) {
+      #stats-row { grid-template-columns: repeat(2, 1fr); }
+      .s-item { padding: 0.9rem 0.3rem; border-right: none; border-bottom: 1px solid rgba(240,235,227,0.06); }
+      .s-item:nth-child(odd) { border-right: 1px solid rgba(240,235,227,0.06); }
+      .s-item:nth-child(3), .s-item:nth-child(4) { border-bottom: none; }
+    }
+
+
+    /* ══════════════════════════════════════
+       SLIDE 7 — WHAT IT STARTS
+    ══════════════════════════════════════ */
+    #ch-stages {
+      padding: 5rem 1.5rem 4rem;
+    }
+    @media (min-width: 769px) {
+      #ch-stages {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 4rem; padding: 5rem 5vw 4rem;
+        align-items: start;
+      }
+    }
+
+    .speaking-wrap {
+      background: var(--dim); overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    @media (min-width: 769px) {
+      .speaking-wrap { margin-bottom: 0; position: sticky; top: 5.5rem; }
+    }
+    .speaking-wrap img { width: 100%; height: auto; display: block; }
+
+    /* Route ticker */
+    .route-ticker {
+      overflow: hidden; white-space: nowrap;
+      margin-bottom: 2.5rem;
+      border-top: 1px solid rgba(141,21,58,0.15);
+      border-bottom: 1px solid rgba(141,21,58,0.15);
+      padding: 0.8rem 0;
+      mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    }
+    .ticker-inner { display: inline-flex; gap: 0; animation: ticker 28s linear infinite; will-change: transform; }
+    .ticker-item { font-family: 'Bebas Neue', sans-serif; font-size: 0.72rem; letter-spacing: 0.35em; color: var(--muted); opacity: 0.5; padding: 0 2.4rem; }
+    .ticker-dot { font-size: 0.5rem; color: var(--crimson); opacity: 0.6; display: inline-block; vertical-align: middle; padding: 0 0.2rem; }
+    @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { .ticker-inner { animation: none; } }
+
+    /* Stages */
+    .stages-label { font-family: 'Bebas Neue', sans-serif; font-size: 0.7rem; letter-spacing: 0.42em; color: var(--crimson); opacity: 0.65; margin-bottom: 1.5rem; text-transform: uppercase; }
+    .stage { display: flex; gap: 1.4rem; padding: 1.4rem 0.6rem; border-bottom: 1px solid rgba(240,235,227,0.06); align-items: flex-start; transition: background 0.25s; margin: 0 -0.6rem; }
+    .stage:hover { background: rgba(141,21,58,0.055); }
+    .stage:first-of-type { border-top: 1px solid rgba(240,235,227,0.06); }
+    .stage-n { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; line-height: 1; color: var(--crimson); opacity: 0.45; flex-shrink: 0; width: 2.6rem; }
+    .stage-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.08em; color: var(--white); margin-bottom: 0.4rem; }
+    .stage-desc { font-size: clamp(0.88rem, 2vw, 0.98rem); font-weight: 400; color: var(--muted); line-height: 1.7; margin-bottom: 0.35rem; }
+
+    .stages-closer {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      letter-spacing: 0.05em; color: var(--white);
+      line-height: 1.15; margin-top: 2.5rem;
+      padding-left: 1.2rem; border-left: 2px solid var(--crimson);
+    }
+
+
+    /* ══════════════════════════════════════
+       SLIDE 8 — JOIN ME
+    ══════════════════════════════════════ */
+    #ch-join {
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 5rem 1.5rem 4rem; text-align: center;
+      background: radial-gradient(ellipse at 50% 100%, rgba(141,21,58,0.07) 0%, transparent 55%);
+    }
+
+    .join-inner { max-width: 480px; width: 100%; opacity: 0; transform: translateY(20px); }
+
+    .join-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      letter-spacing: 0.06em; margin-bottom: 1rem;
+    }
+    .join-sub { font-size: 1rem; color: var(--muted); line-height: 1.65; margin-bottom: 0.3rem; }
+
+    .email-row {
+      display: flex; align-items: stretch; gap: 0;
+      border: 1px solid rgba(141,21,58,0.5); transition: border-color 0.25s;
+      margin-top: 2rem;
+    }
+    .email-row:focus-within { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(245,168,0,0.18); }
+    .email-input {
+      flex: 1; background: rgba(255,255,255,0.04); border: none; color: var(--white);
+      font-family: 'Source Sans 3', sans-serif; font-size: 0.95rem; font-weight: 600;
+      padding: 1rem 1.2rem; outline: none;
+    }
+    .email-input::placeholder { color: rgba(240,235,227,0.22); }
+    .btn-join {
+      background: var(--crimson); border: none; color: var(--white);
+      font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.18em;
+      padding: 0 1.8rem; cursor: pointer; white-space: nowrap;
+      transition: background 0.2s; flex-shrink: 0;
+    }
+    .btn-join:hover { background: #A01845; }
+    .btn-join:active { opacity: 0.85; }
+    .btn-join:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
+
+    #form-note { font-size: 0.72rem; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; margin-top: 0.9rem; }
+    .givestar-link { margin-top: 1.2rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); }
+    .givestar-link a { color: var(--crimson); text-decoration: none; transition: color 0.2s; }
+    .givestar-link a:hover { color: var(--saffron); }
+
+    .join-footer {
+      margin-top: 3rem; padding-top: 1.5rem;
+      border-top: 1px solid rgba(240,235,227,0.05);
+      display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center;
+    }
+    .join-footer a {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color 0.2s;
+    }
+    .join-footer a:hover { color: var(--saffron); }
+    .join-footer a.sponsor { color: var(--crimson); }
+    .join-footer a.sponsor:hover { color: var(--saffron); }
+  </style>
+</head>
+<body>
+
+  <!-- Flag bar -->
+  <div class="flag" style="position:fixed; top:0; left:0; right:0; z-index:850;"><s></s><s></s><s></s><s></s><s></s></div>
+
+  <!-- Nav -->
+  <nav>
+    <span class="d" style="font-size:1.2rem; letter-spacing:0.25em; color:var(--saffron);">LANKA LAP</span>
+    <a href="#" id="nav-join" style="font-size:0.7rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--white); text-decoration:none; opacity:0.55;"
+       onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.55'">FOLLOW THE RUN →</a>
+  </nav>
+
+  <!-- Progress dots -->
+  <nav id="pg-dots" aria-label="Slide navigation">
+    <button class="pg-dot active" data-idx="0" aria-label="Slide 1: The island"></button>
+    <button class="pg-dot" data-idx="1" aria-label="Slide 2: Who I am"></button>
+    <button class="pg-dot" data-idx="2" aria-label="Slide 3: In between"></button>
+    <button class="pg-dot" data-idx="3" aria-label="Slide 4: My parents"></button>
+    <button class="pg-dot" data-idx="4" aria-label="Slide 5: So I'm building it"></button>
+    <button class="pg-dot" data-idx="5" aria-label="Slide 6: The run"></button>
+    <button class="pg-dot" data-idx="6" aria-label="Slide 7: What it starts"></button>
+    <button class="pg-dot" data-idx="7" aria-label="Slide 8: Follow it"></button>
+  </nav>
+
+  <!-- Slides -->
+  <main id="slides">
+
+    <!-- SLIDE 1 — THE ISLAND -->
+    <section class="ch" id="ch-island">
+
+      <div id="island-wrap" aria-hidden="true">
+        <svg id="island-svg" viewBox="0 0 180 256" fill="none"
+             style="width:100%; height:auto; display:block;">
+          <defs>
+            <radialGradient id="g-terrain" cx="72" cy="110" r="105" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#2E4418"/>
+              <stop offset="30%"  stop-color="#1E3010"/>
+              <stop offset="65%"  stop-color="#142008"/>
+              <stop offset="100%" stop-color="#0C1606"/>
+            </radialGradient>
+            <radialGradient id="g-shelf" cx="88" cy="135" r="130" gradientUnits="userSpaceOnUse">
+              <stop offset="60%"  stop-color="transparent"/>
+              <stop offset="85%"  stop-color="rgba(100,160,70,0.06)"/>
+              <stop offset="100%" stop-color="rgba(100,180,80,0.14)"/>
+            </radialGradient>
+            <pattern id="map-grid" x="0" y="0" width="18" height="18" patternUnits="userSpaceOnUse">
+              <path d="M 18 0 L 0 0 0 18" fill="none" stroke="rgba(160,200,120,0.05)" stroke-width="0.3"/>
+            </pattern>
+            <filter id="glow-stroke" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur1"/>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur2"/>
+            <feMerge><feMergeNode in="blur2"/><feMergeNode in="blur1"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-dot" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <clipPath id="island-clip">
+              <path d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"/>
+            </clipPath>
+          </defs>
+          <path d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z" fill="url(#g-terrain)"/>
+          <path d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z" fill="url(#g-shelf)"/>
+          <rect x="0" y="0" width="180" height="256" fill="url(#map-grid)" clip-path="url(#island-clip)"/>
+          <path d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z" fill="none" stroke="rgba(120,175,80,0.12)" stroke-width="4"/>
+          <g opacity="0.2">
+            <line x1="160" y1="22" x2="160" y2="10" stroke="rgba(245,168,0,0.8)" stroke-width="0.8" stroke-linecap="round"/>
+            <polygon points="160,8 158.2,13 161.8,13" fill="rgba(245,168,0,0.9)"/>
+            <text x="160" y="26" text-anchor="middle" font-family="'Source Sans 3',sans-serif" font-size="4" font-weight="700" fill="rgba(245,168,0,0.7)" letter-spacing="0.1em">N</text>
+          </g>
+          <circle cx="75"  cy="17"  r="1.6" fill="rgba(245,168,0,0.5)"/>
+          <circle cx="150" cy="88"  r="1.6" fill="rgba(245,168,0,0.45)"/>
+          <circle cx="68"  cy="138" r="1.6" fill="rgba(245,168,0,0.38)"/>
+          <circle cx="80"  cy="248" r="1.6" fill="rgba(245,168,0,0.45)"/>
+          <circle id="colombo-ring" cx="20" cy="186" r="8" fill="none" stroke="rgba(245,168,0,0.45)" stroke-width="0.8"/>
+          <circle cx="20" cy="186" r="2.5" fill="rgba(245,168,0,0.7)"/>
+          <text x="26" y="190" font-family="'Source Sans 3',sans-serif" font-size="4.5" font-weight="700" fill="rgba(245,168,0,0.55)" letter-spacing="0.06em">COLOMBO</text>
+          <text x="26" y="195.5" font-family="'Source Sans 3',sans-serif" font-size="3.2" fill="rgba(245,168,0,0.3)" letter-spacing="0.04em">START / FINISH</text>
+          <path id="coast-path" d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"
+                stroke="var(--crimson)" stroke-width="1.6" stroke-linecap="round" fill="none" filter="url(#glow-stroke)"/>
+          <circle id="run-dot" cx="20" cy="186" r="3.5" fill="var(--saffron)" opacity="0" filter="url(#glow-dot)"/>
+        </svg>
+
+        <div id="cd-strip">
+          <div id="cd-label-top">Until July 1</div>
+          <div id="cd-numbers">
+            <div class="cd-n" id="cd-d">--</div><div class="cd-l">days</div>
+            <div class="cd-dot">:</div>
+            <div class="cd-n" id="cd-h">--</div><div class="cd-l">hrs</div>
+            <div class="cd-dot">:</div>
+            <div class="cd-n" id="cd-m">--</div><div class="cd-l">min</div>
+            <div class="cd-dot">:</div>
+            <div class="cd-n" id="cd-s">--</div><div class="cd-l">sec</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="ch1-text">
+        <div id="ch1-eyebrow">July 1, 2026 · Sri Lanka</div>
+        <div id="ch1-headline" class="d">1,400<span style="color:var(--crimson);">KM</span></div>
+        <div id="ch1-sub">Creating the voice I wish I had.</div>
+      </div>
+
+      <div class="slide-hint" id="ch1-hint" aria-hidden="true">
+        <span>keep reading</span>
+        <svg width="20" height="16" viewBox="0 0 20 16" fill="none">
+          <path d="M2 8h16M9 1l7 7-7 7" stroke="var(--white)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+    </section>
+
+
+    <!-- SLIDE 2 — THE PERSON -->
+    <section class="ch" id="ch-person">
+
+      <div class="person-photo">
+        <img src="images/sash-london.jpg" alt="Sash on Hungerford Bridge, London" loading="lazy" />
+      </div>
+
+      <div class="person-text reveal">
+        <p class="body-eyebrow">Sash Jayasinghe · 21</p>
+        <p class="body-p">Born in Rome to Sri Lankan parents.</p>
+        <p class="body-p">Moved to London at 13.</p>
+        <p class="body-p" style="margin-top:1rem;">Spent years learning to fit in.</p>
+        <p class="body-strong">That skill didn't transfer.</p>
+      </div>
+
+    </section>
+
+
+    <!-- SLIDE 3 — IN BETWEEN -->
+    <section class="ch" id="ch-childhood">
+
+      <div class="childhood-text reveal">
+        <p class="body-eyebrow">Where I came from</p>
+        <p class="body-p">In Italy I was the brown kid.</p>
+        <p class="body-p">In London I was a coconut —</p>
+        <p class="body-p">Brown on the outside, white on the inside.</p>
+        <p class="body-p" style="margin-top:1rem;">Too western for South Asian spaces.</p>
+        <p class="body-p">Too foreign for everyone else.</p>
+      </div>
+
+      <div class="childhood-photos reveal" aria-label="Childhood photos">
+        <div class="old-photo">
+          <img src="images/sash-young-beach.jpg" alt="Sash as a child on a beach" loading="lazy" />
+        </div>
+        <div class="old-photo">
+          <img src="images/sash-young-indoor.jpg" alt="Sash as a child" loading="lazy" />
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- SLIDE 4 — MY PARENTS -->
+    <section class="ch" id="ch-parents">
+
+      <div class="parents-text reveal">
+        <p class="body-eyebrow">My family</p>
+        <p class="body-p">They came from Sri Lanka.</p>
+        <p class="body-p">They built a life somewhere else.</p>
+        <p class="body-p">I grew up in between.</p>
+        <p class="body-p" style="margin-top:1rem;">I spent years looking for a room</p>
+        <p class="body-p">where that wasn't the problem.</p>
+        <p class="body-strong" style="margin-top:0.8rem;">I never found it.</p>
+      </div>
+
+      <div class="parents-photos reveal">
+        <div class="parents-photo-main">
+          <img src="images/parents.jpg" alt="Sash's parents" loading="lazy" />
+        </div>
+        <div class="parents-photo-baby">
+          <img src="images/family.jpg" alt="Sash as a baby with his parents" loading="lazy" />
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- SLIDE 5 — PIVOT -->
+    <section class="ch" id="ch-pivot">
+      <div class="reveal">
+        <div id="pivot-line">So I'm<br/><span style="color:var(--crimson);">Building it.</span></div>
+        <p class="body-p" style="max-width:40ch;">July 1 — I trace the edges of the island that made my parents.</p>
+        <p class="body-p" style="max-width:40ch;">The one I grew up outside.</p>
+      </div>
+    </section>
+
+
+    <!-- SLIDE 6 — THE RUN -->
+    <section class="ch" id="ch-run">
+
+      <div class="run-photo">
+        <img src="images/sash-flag.jpg" alt="Sash holding the Sri Lanka flag after a run" loading="lazy" />
+      </div>
+      <div class="run-overlay"></div>
+
+      <div class="run-content reveal">
+        <p class="body-eyebrow">July 1, 2026</p>
+        <p class="body-lead">1,400km around Sri Lanka's entire coastline.</p>
+        <p class="body-p">Alone. 30 days.</p>
+        <p class="body-strong">Nobody has done this.</p>
+
+        <div id="stats-row">
+          <div class="s-item">
+            <div class="s-n" data-count="1400">0</div>
+            <div class="s-l">Kilometres</div>
+            <div class="s-sub">the entire coastline</div>
+          </div>
+          <div class="s-item">
+            <div class="s-n" data-count="30">0</div>
+            <div class="s-l">Days</div>
+            <div class="s-sub">July 1 — no stopping</div>
+          </div>
+          <div class="s-item">
+            <div class="s-n" data-count="45">0</div>
+            <div class="s-l">KM/Day</div>
+            <div class="s-sub">more than a marathon. every day.</div>
+          </div>
+          <div class="s-item">
+            <div class="s-n" data-count="5">0</div>
+            <div class="s-l">Youth Clubs</div>
+            <div class="s-sub">opened while running</div>
+          </div>
+        </div>
+
+        <p class="body-p">This isn't a challenge I'm performing.</p>
+        <p class="body-strong">Sri Lanka is the whole point.</p>
+        <p class="body-p" style="margin-top:0.6rem;">Every day filmed. The bad days too.</p>
+      </div>
+
+    </section>
+
+
+    <!-- SLIDE 7 — WHAT IT STARTS -->
+    <section class="ch ch-tall" id="ch-stages">
+
+      <div class="speaking-wrap reveal" aria-hidden="true">
+        <img src="images/sash-speaking.jpg" alt="" loading="lazy" />
+      </div>
+
+      <div class="stages-content reveal">
+
+        <div class="route-ticker" aria-hidden="true">
+          <div class="ticker-inner">
+            <span class="ticker-item">COLOMBO</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">GALLE</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">HAMBANTOTA</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">BATTICALOA</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">TRINCOMALEE</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">JAFFNA</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">MANNAR</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">COLOMBO</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">GALLE</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">HAMBANTOTA</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">BATTICALOA</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">TRINCOMALEE</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">JAFFNA</span><span class="ticker-dot">·</span>
+            <span class="ticker-item">MANNAR</span><span class="ticker-dot">·</span>
+          </div>
+        </div>
+
+        <p class="stages-label">What this starts</p>
+
+        <div class="stage">
+          <div class="stage-n">01</div>
+          <div>
+            <div class="stage-title">Running Clubs</div>
+            <p class="stage-desc">5 youth running clubs — launched while running.</p>
+            <p class="stage-desc">Without Nūl, they're events.</p>
+            <p class="stage-desc" style="margin-bottom:0;">With Nūl, they're infrastructure.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-n">02</div>
+          <div>
+            <div class="stage-title">Retreats <span style="font-size:0.7rem; letter-spacing:0.1em; color:var(--muted); opacity:0.6; font-family:'Source Sans 3',sans-serif; font-weight:600;">· with Nūl</span></div>
+            <p class="stage-desc">For people like me. Sri Lankan roots. Raised somewhere else.</p>
+            <p class="stage-desc" style="margin-bottom:0;">The room I never found — on Nūl's land in Sri Lanka.</p>
+          </div>
+        </div>
+
+        <div class="stage">
+          <div class="stage-n">03</div>
+          <div>
+            <div class="stage-title">4Lanka Marathon <span style="font-size:0.7rem; letter-spacing:0.1em; color:var(--muted); opacity:0.55; font-family:'Source Sans 3',sans-serif; font-weight:600; text-transform:none;">one step at a time</span></div>
+            <p class="stage-desc">The run becomes an annual marathon.</p>
+            <p class="stage-desc" style="margin-bottom:0;">Sri Lanka and the diaspora — on the same finish line.</p>
+          </div>
+        </div>
+
+        <p class="stages-closer"><span style="opacity:0.65;">Not inspiration.</span><br/>Infrastructure.</p>
+
+      </div>
+    </section>
+
+
+    <!-- SLIDE 8 — JOIN ME -->
+    <section class="ch" id="ch-join">
+      <div class="join-inner">
+        <div class="d join-heading">FOLLOW IT FROM THE START.</div>
+        <p class="join-sub">I'll write from training, from the road.</p>
+        <p class="join-sub">Everything from day one. No noise.</p>
+        <form id="email-form">
+          <div class="email-row">
+            <label for="email-in" style="position:absolute; opacity:0; pointer-events:none;">Email</label>
+            <input id="email-in" class="email-input" type="email" name="email"
+                   placeholder="your@email.com" required autocomplete="email" />
+            <button type="submit" class="btn-join">COUNT ME IN</button>
+          </div>
+        </form>
+        <p id="form-note">I'll write from training, from the road. Nothing else.</p>
+        <p class="givestar-link">or <a href="https://givestar.io/gs/the-voice-i-wish-i-had-a-lap-of-sri-lanka" target="_blank" rel="noopener noreferrer">support the run directly →</a></p>
+
+        <div class="join-footer">
+          <a href="https://instagram.com/sash.jm" target="_blank" rel="noopener noreferrer">@sash.jm</a>
+          <a href="mailto:sashj.enquiry@yahoo.com">Email me</a>
+          <a href="https://givestar.io/gs/the-voice-i-wish-i-had-a-lap-of-sri-lanka" target="_blank" rel="noopener noreferrer" class="sponsor">Support the run</a>
+        </div>
+        <div style="margin-top:1.5rem; font-size:0.65rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); opacity:0.4;">In partnership with Nūl — Sri Lanka</div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <script>
+    /* ── INIT ── */
+    gsap.registerPlugin(MotionPathPlugin);
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) gsap.globalTimeline.timeScale(1000);
+
+    const slidesEl = document.getElementById('slides');
+    const slides   = Array.from(document.querySelectorAll('.ch'));
+    const dots     = Array.from(document.querySelectorAll('.pg-dot'));
+    let   current  = 0;
+    const fired    = new Set();
+
+    /* ── COUNTDOWN ── */
+    (function tick() {
+      const diff = new Date('2026-07-01T00:00:00+05:30') - new Date();
+      if (diff <= 0) return;
+      const pad = n => String(n).padStart(2,'0');
+      document.getElementById('cd-d').textContent = pad(Math.floor(diff / 86400000));
+      document.getElementById('cd-h').textContent = pad(Math.floor((diff % 86400000) / 3600000));
+      document.getElementById('cd-m').textContent = pad(Math.floor((diff % 3600000)  / 60000));
+      document.getElementById('cd-s').textContent = pad(Math.floor((diff % 60000)    / 1000));
+      setTimeout(tick, 1000);
+    })();
+
+    /* ── ISLAND ANIMATION (fires once on load) ── */
+    const coastPath = document.getElementById('coast-path');
+    const dot       = document.getElementById('run-dot');
+    const pathLen   = coastPath.getTotalLength();
+    coastPath.style.strokeDasharray  = pathLen;
+    coastPath.style.strokeDashoffset = pathLen;
+
+    if (!reducedMotion) {
+      gsap.to('#colombo-ring', { attr: { r: 16 }, opacity: 0, duration: 2.2, repeat: -1, ease: 'power2.out', delay: 0.8 });
+    }
+
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.to(coastPath, { strokeDashoffset: 0, duration: 2.2, ease: 'power2.inOut' }, 0.3)
+      .to(dot, { opacity: 1, duration: 0.2 }, 0.6)
+      .to({ p: 0 }, {
+        p: 1, duration: 2.5, ease: 'power1.inOut',
+        onUpdate: function() {
+          const pt = coastPath.getPointAtLength(this.targets()[0].p * pathLen);
+          dot.setAttribute('cx', pt.x);
+          dot.setAttribute('cy', pt.y);
+        },
+        onComplete: () => {
+          if (!reducedMotion) {
+            gsap.to(dot, { attr:{ r: 5.5 }, opacity: 0.65, duration: 0.9, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+          }
+        }
+      }, 0.6)
+      .fromTo('#cd-strip',  { opacity:0, y:8  }, { opacity:1, y:0, duration:0.5 }, 0.8)
+      .fromTo('#ch1-text',  { opacity:0, y:20 }, { opacity:1, y:0, duration:0.6 }, 1.4)
+      .fromTo('#ch1-hint',  { opacity:0       }, { opacity:1,      duration:0.5 }, 2.2);
+
+    /* ── SLIDE ANIMATIONS ── */
+    function triggerStats() {
+      if (fired.has('stats')) return;
+      fired.add('stats');
+      gsap.to('#stats-row', { opacity:1, y:0, duration:0.7, ease:'power3.out', delay:0.3 });
+      document.querySelectorAll('[data-count]').forEach((el, i) => {
+        const target = parseInt(el.dataset.count);
+        const obj = { v: 0 };
+        gsap.to(obj, {
+          v: target, duration: 1.6, delay: 0.4 + i * 0.08, ease: 'power2.out',
+          onUpdate: () => { el.textContent = Math.round(obj.v).toLocaleString(); }
+        });
+      });
+    }
+
+    function enterSlide(slide, idx) {
+      /* Update dots */
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      current = idx;
+
+      if (fired.has(idx)) return;
+      fired.add(idx);
+
+      /* Reveals in this slide */
+      slide.querySelectorAll('.reveal').forEach((el, i) => {
+        gsap.to(el, { opacity:1, y:0, duration:0.75, delay: i * 0.12, ease:'power3.out' });
+      });
+
+      /* Slide-specific triggers */
+      if (slide.id === 'ch-run')  triggerStats();
+      if (slide.id === 'ch-join') gsap.to('.join-inner', { opacity:1, y:0, duration:0.85, ease:'power3.out' });
+    }
+
+    /* ── INTERSECTION OBSERVER — horizontal ── */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const idx = slides.indexOf(entry.target);
+        if (idx === -1) return;
+        enterSlide(entry.target, idx);
+      });
+    }, { root: slidesEl, threshold: 0.4 });
+
+    slides.forEach(s => io.observe(s));
+
+    /* ── DOT NAVIGATION ── */
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const idx = parseInt(dot.dataset.idx);
+        slidesEl.scrollTo({ left: slides[idx].offsetLeft, behavior: 'smooth' });
+      });
+    });
+
+    /* ── KEYBOARD NAVIGATION — horizontal ── */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+        e.preventDefault();
+        const next = Math.min(current + 1, slides.length - 1);
+        slidesEl.scrollTo({ left: slides[next].offsetLeft, behavior: 'smooth' });
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = Math.max(current - 1, 0);
+        slidesEl.scrollTo({ left: slides[prev].offsetLeft, behavior: 'smooth' });
+      }
+    });
+
+    /* ── NAV "FOLLOW THE RUN" → last slide ── */
+    document.getElementById('nav-join').addEventListener('click', e => {
+      e.preventDefault();
+      slidesEl.scrollTo({ left: slides[slides.length - 1].offsetLeft, behavior: 'smooth' });
+    });
+
+    /* ── FORM HANDLER — Kit ── */
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const btn   = e.target.querySelector('.btn-join');
+      const email = document.getElementById('email-in').value.trim();
+      const orig  = btn.textContent;
+      btn.textContent = '...'; btn.disabled = true;
+      try {
+        const res = await fetch('https://api.convertkit.com/v3/forms/65aa1813a8/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ api_key: 'aqaYfs33X9Kwc5fG_0CXug', email })
+        });
+        const data = await res.json();
+        if (res.ok && data.subscription) {
+          const inner = document.querySelector('.join-inner');
+          inner.innerHTML = '<div class="d" style="font-size:1.6rem;letter-spacing:0.12em;color:var(--saffron);">YOU\'RE IN.</div><p style="font-size:1rem;color:var(--white);margin-top:0.5rem;font-weight:600;">I\'ll write from training, from the road. Everything from day one.</p>';
+          gsap.fromTo(inner, { opacity:0, y:12 }, { opacity:1, y:0, duration:0.5 });
+        } else {
+          btn.textContent = 'TRY AGAIN'; btn.disabled = false;
+        }
+      } catch {
+        btn.textContent = orig; btn.disabled = false;
+      }
+    }
+    document.getElementById('email-form').addEventListener('submit', handleFormSubmit);
+  </script>
+
+</body>
+</html>
