@@ -5,36 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lanka Lap 2026 — Sash Jayasinghe</title>
   <meta name="description" content="On July 1, 2026, Sash Jayasinghe runs 1,400km around Sri Lanka's coastline. Follow it from day one." />
-
-  <!-- SEO: replace PASTE_CODE_HERE with your Google Search Console verification code -->
+  <meta property="og:title" content="Lanka Lap 2026 — Sash Jayasinghe" />
+  <meta property="og:description" content="I'm running a full lap of Sri Lanka. 1,400km. 30 days. Nobody has done this." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="google-site-verification" content="PASTE_CODE_HERE" />
-  <!-- Sitemap reference -->
   <link rel="sitemap" type="application/xml" href="/lanka-lap-2026/sitemap.xml" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='1' fill='%238D153A' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js" defer></script>
 
   <style>
-    /* ─────────────────────────────────────────────
-       DESIGN TOKENS — edit these to change palette
-       ───────────────────────────────────────────── */
+    /* ─── TOKENS ─────────────────────────────────── */
     :root {
-      --bg:       #06000A;    /* near-black */
-      --surface:  #0F080F;    /* cards / lifted surface */
-      --crimson:  #8D153A;    /* Sri Lanka red — primary accent */
-      --saffron:  #F5A800;    /* Sri Lanka gold — highlight */
-      --orange:   #E87722;    /* warm accent for stats / CTAs */
-      --green:    #006533;    /* Sri Lanka green — flag stripe */
-      --white:    #F0EBE3;    /* warm white — all body text */
-      --muted:    #6B616B;    /* secondary text */
-      --border:   rgba(240,235,227,0.07);
+      --bg:      #06000A;
+      --surface: #0D060F;
+      --crimson: #8D153A;
+      --saffron: #F5A800;
+      --orange:  #E87722;
+      --green:   #006533;
+      --white:   #F0EBE3;
+      --muted:   #635B63;
+      --border:  rgba(240,235,227,0.07);
+
+      /* Emil: custom easing curves — never use bare ease/ease-in */
+      --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
     }
 
-    /* ─────────────────────────────────────────────
-       RESET + BASE
-       ───────────────────────────────────────────── */
+    /* ─── RESET ──────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html {
@@ -48,23 +51,15 @@
       background: var(--bg);
       color: var(--white);
       font-family: 'Source Sans 3', sans-serif;
-      font-size: 16px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
 
-    h1, h2, h3 {
-      font-family: 'Bebas Neue', sans-serif;
-      letter-spacing: 0.04em;
-      line-height: 0.9;
-    }
-
-    /* ─────────────────────────────────────────────
-       FLAG STRIPE — top of page
-       ───────────────────────────────────────────── */
+    /* ─── FLAG STRIPE ─────────────────────────────── */
     .flag {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; height: 3px;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; height: 3px; pointer-events: none;
     }
     .flag span { display: block; }
     .flag span:nth-child(1) { background: var(--green);   flex: 1; }
@@ -73,84 +68,92 @@
     .flag span:nth-child(4) { background: var(--orange);  flex: 1; }
     .flag span:nth-child(5) { background: var(--green);   flex: 1; }
 
-    /* ─────────────────────────────────────────────
-       SECTIONS — each takes exactly 100vh
-       ───────────────────────────────────────────── */
-    .section {
+    /* ─── SECTIONS ────────────────────────────────── */
+    .slide {
       scroll-snap-align: start;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 3rem 2rem;
       position: relative;
     }
 
-    /* Eyebrow label — small uppercase above headlines */
     .eyebrow {
       font-size: 0.58rem;
       font-weight: 700;
       letter-spacing: 0.36em;
       text-transform: uppercase;
       color: var(--crimson);
-      opacity: 0.7;
-      margin-bottom: 1.4rem;
       display: block;
+      margin-bottom: 1.2rem;
     }
 
-
-    /* ═══════════════════════════════════════════
-       SECTION 1 — HERO
-       ═══════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════ */
     #hero {
       flex-direction: column;
       text-align: center;
-      background: radial-gradient(ellipse at 50% 55%, rgba(22,6,32,1) 0%, var(--bg) 70%);
-      overflow: hidden;
+      padding: 5rem 2rem 4rem;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 60%, rgba(24,6,36,0.95) 0%, transparent 100%);
     }
 
-    /* Island container — stats orbit around this */
+    /* Island scene */
     .island-scene {
       position: relative;
-      width: 280px;
-      height: 280px;
-      margin-bottom: 2.8rem;
+      width: min(260px, 52vw);
+      height: min(260px, 52vw);
+      margin-bottom: 3rem;
       flex-shrink: 0;
     }
 
-    /* The SVG island itself, centered in the scene */
     .island-svg {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 140px;
+      width: 55%;
       height: auto;
     }
 
-    /* Floating stat chips orbiting the island */
-    .stat-chip {
+    /* Stat chips — orbit the island */
+    .chip {
       position: absolute;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.15rem;
+      gap: 0.1rem;
+      /* Emil: enter from scale(0.95) + opacity 0, not scale(0) */
       opacity: 0;
-      animation: float-in 0.6s ease forwards, float-bob 5s ease-in-out infinite;
+      transform: scale(0.95) translateY(6px);
+      transition:
+        opacity 500ms var(--ease-out),
+        transform 500ms var(--ease-out);
     }
-    .stat-chip:nth-child(2) { top: 12%;  left:  4%; animation-delay: 1.2s, 1.2s; }
-    .stat-chip:nth-child(3) { top: 10%;  right: 6%; animation-delay: 1.5s, 1.5s; }
-    .stat-chip:nth-child(4) { bottom: 18%; left: 0%; animation-delay: 1.8s, 1.8s; }
-    .stat-chip:nth-child(5) { bottom: 20%; right: 2%; animation-delay: 2.1s, 2.1s; }
+    .chip.visible {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    /* Float only after entering — decoration, seen once */
+    .chip.visible { animation: chip-float 6s var(--ease-in-out) infinite; }
+    .chip:nth-child(1) { top: 5%;  left: 2%;  transition-delay: 1.2s; animation-delay: 1.8s; }
+    .chip:nth-child(2) { top: 4%;  right: 0%; transition-delay: 1.5s; animation-delay: 2.1s; }
+    .chip:nth-child(3) { bottom: 12%; left: 0%; transition-delay: 1.8s; animation-delay: 2.4s; }
+    .chip:nth-child(4) { bottom: 10%; right: 0%; transition-delay: 2.1s; animation-delay: 2.7s; }
 
-    .stat-chip-n {
+    @keyframes chip-float {
+      0%, 100% { transform: scale(1) translateY(0); }
+      50%       { transform: scale(1) translateY(-6px); }
+    }
+
+    .chip-n {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.5rem;
+      font-size: clamp(1.2rem, 3.5vw, 1.6rem);
       line-height: 1;
       color: var(--saffron);
-      letter-spacing: 0.04em;
     }
-    .stat-chip-l {
-      font-size: 0.48rem;
+    .chip-l {
+      font-size: 0.44rem;
       font-weight: 700;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -158,105 +161,115 @@
       white-space: nowrap;
     }
 
-    @keyframes float-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes float-bob {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-7px); }
-    }
-
     /* Hero text block */
-    #hero-text { opacity: 0; }
+    #hero-text {
+      opacity: 0;
+      transform: scale(0.97) translateY(12px);
+      transition:
+        opacity 600ms var(--ease-out),
+        transform 600ms var(--ease-out);
+    }
+    #hero-text.visible {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
 
-    .hero-headline {
-      font-size: clamp(3.2rem, 13vw, 7.5rem);
-      line-height: 0.88;
+    .hero-hl {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 20vw, 11rem);
+      line-height: 0.82;
+      letter-spacing: 0.01em;
       margin-bottom: 1.2rem;
     }
 
     .hero-sub {
-      font-size: clamp(0.95rem, 2.4vw, 1.1rem);
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
       font-weight: 600;
       color: var(--white);
-      line-height: 1.7;
+      line-height: 1.65;
       margin-bottom: 0.3rem;
     }
 
-    .hero-sub-muted {
-      font-size: clamp(0.8rem, 1.8vw, 0.88rem);
+    .hero-muted {
+      font-size: clamp(0.8rem, 1.8vw, 0.9rem);
       font-weight: 600;
       color: var(--muted);
       letter-spacing: 0.05em;
     }
 
-    /* Countdown strip */
-    #countdown {
+    /* Countdown */
+    #cd {
       display: flex;
       align-items: baseline;
       justify-content: center;
-      gap: 0.4rem;
-      margin-top: 1.6rem;
+      gap: 0.35rem;
+      margin-top: 1.8rem;
       opacity: 0;
+      transition: opacity 400ms var(--ease-out) 1.8s;
     }
-    .cd-num {
+    #cd.visible { opacity: 1; }
+
+    .cd-n {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       color: var(--white);
       min-width: 2ch;
       text-align: center;
       font-variant-numeric: tabular-nums;
     }
-    .cd-label {
+    .cd-l {
       font-size: 0.38rem;
       font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--muted);
     }
-    .cd-sep {
+    .cd-dot {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: var(--crimson);
-      opacity: 0.45;
+      opacity: 0.4;
     }
 
-    /* Scroll indicator */
+    /* Scroll cue */
     .scroll-cue {
       position: absolute;
-      bottom: 2rem; left: 50%;
+      bottom: 2.2rem;
+      left: 50%;
       transform: translateX(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
       opacity: 0;
-      animation: cue-in 0.6s 2.8s ease forwards;
+      transition: opacity 500ms var(--ease-out) 3s;
     }
+    .scroll-cue.visible { opacity: 1; }
     .scroll-cue-text {
-      font-size: 0.52rem;
+      font-size: 0.5rem;
       font-weight: 700;
-      letter-spacing: 0.26em;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
       color: var(--muted);
     }
     .scroll-cue-line {
       width: 1px;
-      height: 30px;
+      height: 28px;
       background: linear-gradient(to bottom, var(--crimson), transparent);
-      animation: cue-pulse 2s 2.8s ease-in-out infinite;
+      animation: cue-breathe 2s ease-in-out infinite;
     }
-    @keyframes cue-in    { to { opacity: 1; } }
-    @keyframes cue-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+    @keyframes cue-breathe {
+      0%, 100% { opacity: 0.35; }
+      50%       { opacity: 1; }
+    }
 
 
-    /* ═══════════════════════════════════════════
-       SECTION 2 — STORY
-       ═══════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       STORY
+    ═══════════════════════════════════════════════ */
     #story {
       align-items: flex-start;
-      padding: 5rem 2rem 4rem;
+      padding: 6rem 2rem 5rem;
     }
 
     .story-inner {
@@ -265,180 +278,188 @@
       margin: 0 auto;
     }
 
-    .story-headline {
-      font-size: clamp(2.8rem, 8vw, 4.5rem);
-      margin-bottom: 3rem;
+    .story-h {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.6rem, 7vw, 4rem);
+      line-height: 0.9;
+      letter-spacing: 0.03em;
+      margin-bottom: 2.8rem;
+      /* Emil: reveal from near-final state */
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transform: scale(0.97) translateY(16px);
+      transition:
+        opacity 700ms var(--ease-out),
+        transform 700ms var(--ease-out);
     }
-    .story-headline.visible { opacity: 1; transform: translateY(0); }
+    .story-h.visible { opacity: 1; transform: scale(1) translateY(0); }
 
-    /* Each paragraph animates in separately */
     .story-line {
-      font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+      display: block;
+      font-size: clamp(1.05rem, 2.6vw, 1.2rem);
       font-weight: 600;
       color: var(--white);
-      line-height: 1.8;
-      display: block;
-      margin-bottom: 1.4rem;
+      line-height: 1.75;
+      margin-bottom: 1.3rem;
       opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+      transform: translateY(14px);
+      transition:
+        opacity 550ms var(--ease-out),
+        transform 550ms var(--ease-out);
     }
-    .story-line.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .story-line.visible { opacity: 1; transform: translateY(0); }
+
+    .story-break {
+      display: block;
+      height: 1.6rem;
     }
 
-    /* Pull-quote style accent */
     .story-accent {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-size: clamp(2rem, 5.5vw, 3rem);
+      line-height: 1.05;
       color: var(--white);
       letter-spacing: 0.03em;
-      line-height: 1.05;
       display: block;
       margin: 2rem 0;
       opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transform: scale(0.97) translateY(14px);
+      transition:
+        opacity 650ms var(--ease-out),
+        transform 650ms var(--ease-out);
     }
-    .story-accent.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .story-accent em {
-      color: var(--crimson);
-      font-style: normal;
-    }
+    .story-accent.visible { opacity: 1; transform: scale(1) translateY(0); }
+    .story-accent em { color: var(--crimson); font-style: normal; }
 
-    .story-gold {
-      color: var(--saffron);
-    }
+    .story-gold { color: var(--saffron); }
 
 
-    /* ═══════════════════════════════════════════
-       SECTION 3 — THE VISION
-       ═══════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       VISION
+    ═══════════════════════════════════════════════ */
     #vision {
       flex-direction: column;
       padding: 5rem 2rem 4rem;
     }
 
-    .vision-header {
+    .vision-hdr {
       text-align: center;
-      margin-bottom: 3.5rem;
+      margin-bottom: 3rem;
       opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+      transform: translateY(16px);
+      transition:
+        opacity 600ms var(--ease-out),
+        transform 600ms var(--ease-out);
     }
-    .vision-header.visible { opacity: 1; transform: translateY(0); }
+    .vision-hdr.visible { opacity: 1; transform: translateY(0); }
 
-    .vision-headline {
+    .vision-h {
+      font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(2.8rem, 8vw, 5rem);
-      margin-bottom: 0.5rem;
+      line-height: 0.88;
+      margin-bottom: 0.6rem;
     }
-
     .vision-sub {
-      font-size: clamp(0.9rem, 2vw, 1rem);
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--muted);
       letter-spacing: 0.04em;
     }
 
-    /* Cards grid */
     .cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      max-width: 900px;
+      gap: 1px;
+      max-width: 860px;
       width: 100%;
+      background: var(--border);
     }
 
     .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 2rem 1.6rem;
+      background: var(--bg);
+      padding: 2rem 1.8rem;
       opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+      transform: translateY(20px);
+      transition:
+        opacity 600ms var(--ease-out),
+        transform 600ms var(--ease-out);
     }
     .card.visible { opacity: 1; transform: translateY(0); }
-    .card:nth-child(2) { transition-delay: 0.12s; }
-    .card:nth-child(3) { transition-delay: 0.24s; }
+    .card:nth-child(2) { transition-delay: 100ms; }
+    .card:nth-child(3) { transition-delay: 200ms; }
 
     .card-num {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.2rem;
+      font-size: 1.8rem;
       color: var(--crimson);
-      opacity: 0.35;
+      opacity: 0.3;
       line-height: 1;
       margin-bottom: 1.2rem;
     }
-
     .card-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       letter-spacing: 0.06em;
       color: var(--white);
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.7rem;
     }
-
     .card-body {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       color: var(--muted);
       line-height: 1.75;
     }
 
-    /* Stack cards vertically on mobile */
-    @media (max-width: 680px) {
-      .cards { grid-template-columns: 1fr; max-width: 500px; }
+    @media (max-width: 640px) {
+      .cards { grid-template-columns: 1fr; }
     }
 
 
-    /* ═══════════════════════════════════════════
-       SECTION 4 — JOIN THE WAITLIST
-       ═══════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       JOIN
+    ═══════════════════════════════════════════════ */
     #join {
       flex-direction: column;
       text-align: center;
       padding: 5rem 2rem 4rem;
-      background: radial-gradient(ellipse at 50% 100%, rgba(141,21,58,0.1) 0%, transparent 60%);
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 110%, rgba(141,21,58,0.12) 0%, transparent 70%);
     }
 
     .join-inner {
-      max-width: 460px;
+      max-width: 440px;
       width: 100%;
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transform: scale(0.97) translateY(16px);
+      transition:
+        opacity 700ms var(--ease-out),
+        transform 700ms var(--ease-out);
     }
-    .join-inner.visible { opacity: 1; transform: translateY(0); }
+    .join-inner.visible { opacity: 1; transform: scale(1) translateY(0); }
 
-    .join-headline {
+    .join-h {
+      font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(3rem, 9vw, 5rem);
-      margin-bottom: 1.2rem;
+      line-height: 0.88;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.4rem;
     }
-
     .join-sub {
       font-size: clamp(0.95rem, 2.2vw, 1.05rem);
       font-weight: 600;
       color: var(--muted);
       line-height: 1.75;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
 
     /* Email form */
-    .email-form {
-      margin-top: 2rem;
-    }
-
     .email-row {
       display: flex;
-      border: 1px solid rgba(141,21,58,0.5);
-      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-top: 2rem;
+      border: 1px solid rgba(141,21,58,0.4);
+      /* Emil: specific transition, not 'all' */
+      transition:
+        border-color 200ms ease,
+        box-shadow 200ms ease;
     }
     .email-row:focus-within {
       border-color: var(--saffron);
@@ -447,7 +468,7 @@
 
     .email-input {
       flex: 1;
-      background: rgba(255,255,255,0.03);
+      background: transparent;
       border: none;
       color: var(--white);
       font-family: 'Source Sans 3', sans-serif;
@@ -458,7 +479,8 @@
     }
     .email-input::placeholder { color: rgba(240,235,227,0.18); }
 
-    .btn-submit {
+    /* Emil: button needs :active scale for feedback */
+    .btn {
       background: var(--crimson);
       border: none;
       color: var(--white);
@@ -468,21 +490,23 @@
       padding: 0 1.8rem;
       cursor: pointer;
       white-space: nowrap;
-      transition: background 0.2s;
+      transition:
+        background 200ms ease,
+        transform 160ms var(--ease-out);
     }
-    .btn-submit:hover    { background: #A8193F; }
-    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn:hover { background: #A8193F; }
+    .btn:active { transform: scale(0.97); }
+    .btn:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-    /* Error state */
     .form-error {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: var(--orange);
+      min-height: 1.1rem;
       margin-top: 0.6rem;
-      min-height: 1rem;
       letter-spacing: 0.04em;
     }
-
     .form-note {
       font-size: 0.66rem;
       font-weight: 600;
@@ -491,16 +515,14 @@
       margin-top: 1rem;
     }
 
-    /* Success state */
-    .join-success {
-      display: none;
-      padding: 2rem 0;
-    }
+    /* Success */
+    .join-success { display: none; }
     .join-success.show { display: block; }
-    .email-form.hide   { display: none; }
+    .email-form.hide { display: none; }
 
-    .success-headline {
-      font-size: clamp(2.4rem, 7vw, 3.5rem);
+    .success-h {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 3.5rem);
       color: var(--saffron);
       margin-bottom: 0.8rem;
     }
@@ -511,29 +533,25 @@
       line-height: 1.8;
     }
 
-    /* Divider */
     .join-divider {
       margin-top: 2.5rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--border);
     }
-
-    /* GiveStar donate link */
-    .donate-link {
-      font-size: 0.72rem;
+    .donate-line {
+      font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       color: var(--muted);
       margin-bottom: 1.2rem;
     }
-    .donate-link a {
+    .donate-line a {
       color: var(--crimson);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color 200ms ease;
     }
-    .donate-link a:hover { color: var(--saffron); }
+    .donate-line a:hover { color: var(--saffron); }
 
-    /* Social links */
     .social-row {
       display: flex;
       justify-content: center;
@@ -547,11 +565,10 @@
       text-transform: uppercase;
       color: var(--muted);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color 200ms ease;
     }
     .social-row a:hover { color: var(--saffron); }
 
-    /* Footer */
     footer {
       text-align: center;
       padding: 2rem;
@@ -560,474 +577,349 @@
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--muted);
-      opacity: 0.28;
+      opacity: 0.25;
       scroll-snap-align: none;
     }
 
-    /* ─────────────────────────────────────────────
-       MOBILE TWEAKS
-       ───────────────────────────────────────────── */
     @media (max-width: 480px) {
       .island-scene { width: 240px; height: 240px; }
-      .island-svg   { width: 120px; }
-      .stat-chip:nth-child(2) { top: 8%;   left:  0%; }
-      .stat-chip:nth-child(3) { top: 8%;   right: 0%; }
-      .stat-chip:nth-child(4) { bottom: 14%; left: 0%; }
-      .stat-chip:nth-child(5) { bottom: 14%; right: 0%; }
       .email-row { flex-direction: column; }
-      .btn-submit { padding: 0.9rem; width: 100%; }
+      .btn { padding: 0.9rem; width: 100%; }
+      #story { padding: 5rem 1.4rem 4rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sri Lanka flag stripe -->
-  <div class="flag" aria-hidden="true">
-    <span></span><span></span><span></span><span></span><span></span>
+<div class="flag" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+
+<!-- ═══ SLIDE 1: HERO ═══════════════════════════ -->
+<section class="slide" id="hero">
+
+  <div class="island-scene" aria-hidden="true">
+
+    <div class="chip">
+      <span class="chip-n">1,400</span>
+      <span class="chip-l">Kilometres</span>
+    </div>
+    <div class="chip">
+      <span class="chip-n">30</span>
+      <span class="chip-l">Days</span>
+    </div>
+    <div class="chip">
+      <span class="chip-n">5</span>
+      <span class="chip-l">Run Clubs</span>
+    </div>
+    <div class="chip">
+      <span class="chip-n">1</span>
+      <span class="chip-l">Mission</span>
+    </div>
+
+    <svg class="island-svg" viewBox="0 0 180 256" fill="none">
+      <defs>
+        <radialGradient id="ig" cx="72" cy="110" r="105" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#2E4418"/>
+          <stop offset="40%"  stop-color="#1A2C0C"/>
+          <stop offset="100%" stop-color="#0C1606"/>
+        </radialGradient>
+        <filter id="cg" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4"  result="b1"/>
+          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b2"/>
+          <feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="dg" x="-200%" y="-200%" width="500%" height="500%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
+        </filter>
+      </defs>
+      <path d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"
+            fill="url(#ig)"/>
+      <path id="coast"
+            d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"
+            stroke="#8D153A" stroke-width="1.8" fill="none" filter="url(#cg)"/>
+      <circle id="cpulse" cx="20" cy="186" r="7"   fill="none" stroke="rgba(245,168,0,0.5)" stroke-width="0.8"/>
+      <circle              cx="20" cy="186" r="2.2" fill="rgba(245,168,0,0.9)"/>
+      <text x="27" y="190" font-family="'Source Sans 3',sans-serif" font-size="5" font-weight="700"
+            fill="rgba(245,168,0,0.5)" letter-spacing="0.05em">COLOMBO</text>
+      <circle id="dot" cx="20" cy="186" r="3.5" fill="#F5A800" opacity="0" filter="url(#dg)"/>
+    </svg>
   </div>
 
-
-  <!-- ═══════════════════════════════════════════
-       SECTION 1 — HERO
-       ═══════════════════════════════════════════ -->
-  <section class="section" id="hero">
-
-    <!-- Island with orbiting stats -->
-    <div class="island-scene" aria-hidden="true">
-
-      <!-- Stat chips — edit text here -->
-      <div class="stat-chip">
-        <span class="stat-chip-n">1,400</span>
-        <span class="stat-chip-l">Kilometres</span>
-      </div>
-      <div class="stat-chip">
-        <span class="stat-chip-n">30</span>
-        <span class="stat-chip-l">Days</span>
-      </div>
-      <div class="stat-chip">
-        <span class="stat-chip-n">5</span>
-        <span class="stat-chip-l">Run Clubs</span>
-      </div>
-      <div class="stat-chip">
-        <span class="stat-chip-n">1</span>
-        <span class="stat-chip-l">Mission</span>
-      </div>
-
-      <!-- Sri Lanka coastline SVG -->
-      <svg class="island-svg" viewBox="0 0 180 256" fill="none">
-        <defs>
-          <radialGradient id="island-grad" cx="72" cy="110" r="105" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="#2E4418"/>
-            <stop offset="40%"  stop-color="#1A2C0C"/>
-            <stop offset="100%" stop-color="#0C1606"/>
-          </radialGradient>
-          <!-- Glow stays inside the SVG — no CSS filter on the element itself -->
-          <filter id="coast-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="4"   result="b1"/>
-            <feGaussianBlur in="SourceGraphic" stdDeviation="10"  result="b2"/>
-            <feMerge>
-              <feMergeNode in="b2"/>
-              <feMergeNode in="b1"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <filter id="dot-glow" x="-200%" y="-200%" width="500%" height="500%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
-          </filter>
-        </defs>
-
-        <!-- Island body -->
-        <path d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"
-              fill="url(#island-grad)"/>
-
-        <!-- Coastline — crimson trace with internal glow -->
-        <path id="coast-path"
-              d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"
-              stroke="#8D153A" stroke-width="1.8" fill="none" filter="url(#coast-glow)"/>
-
-        <!-- Colombo marker -->
-        <circle id="colombo-pulse" cx="20" cy="186" r="7" fill="none"
-                stroke="rgba(245,168,0,0.5)" stroke-width="0.8"/>
-        <circle cx="20" cy="186" r="2.2" fill="rgba(245,168,0,0.85)"/>
-        <text x="27" y="190"
-              font-family="'Source Sans 3',sans-serif" font-size="5"
-              font-weight="700" fill="rgba(245,168,0,0.5)" letter-spacing="0.05em">COLOMBO</text>
-
-        <!-- Running dot — animated along coastline by JS -->
-        <circle id="run-dot" cx="20" cy="186" r="3.5"
-                fill="#F5A800" opacity="0" filter="url(#dot-glow)"/>
-      </svg>
-
+  <div id="hero-text">
+    <p class="eyebrow">July 1, 2026 · Sri Lanka</p>
+    <h1 class="hero-hl">1,400<span style="color:var(--crimson)">KM</span></h1>
+    <p class="hero-sub">I'm running a full lap of Sri Lanka.</p>
+    <p class="hero-muted">30 days. Nobody has done this. Here's why.</p>
+    <div id="cd">
+      <span class="cd-n" id="cd-d">--</span><span class="cd-l">d</span>
+      <span class="cd-dot">·</span>
+      <span class="cd-n" id="cd-h">--</span><span class="cd-l">h</span>
+      <span class="cd-dot">·</span>
+      <span class="cd-n" id="cd-m">--</span><span class="cd-l">m</span>
+      <span class="cd-dot">·</span>
+      <span class="cd-n" id="cd-s">--</span><span class="cd-l">s</span>
     </div>
-    <!-- /island-scene -->
+  </div>
 
-    <!-- Hero text -->
-    <div id="hero-text">
-      <p class="eyebrow">July 1, 2026 · Sri Lanka</p>
-      <h1 class="hero-headline">
-        The Run Is Just<br/>
-        <span style="color:var(--crimson);">The Beginning.</span>
-      </h1>
-      <p class="hero-sub">I'm running a full lap of Sri Lanka.</p>
-      <p class="hero-sub-muted">1,400km. 30 days. Nobody has done this.</p>
+  <div class="scroll-cue" id="scroll-cue" aria-hidden="true">
+    <span class="scroll-cue-text">Read the story</span>
+    <span class="scroll-cue-line"></span>
+  </div>
 
-      <!-- Live countdown -->
-      <div id="countdown">
-        <div class="cd-num" id="cd-d">--</div><div class="cd-label">d</div>
-        <div class="cd-sep">·</div>
-        <div class="cd-num" id="cd-h">--</div><div class="cd-label">h</div>
-        <div class="cd-sep">·</div>
-        <div class="cd-num" id="cd-m">--</div><div class="cd-label">m</div>
-        <div class="cd-sep">·</div>
-        <div class="cd-num" id="cd-s">--</div><div class="cd-label">s</div>
+</section>
+
+
+<!-- ═══ SLIDE 2: STORY ══════════════════════════ -->
+<section class="slide" id="story">
+  <div class="story-inner">
+
+    <h2 class="story-h">Why I'm<br/>doing this.</h2>
+
+    <span class="story-line">Born in Rome to Sri Lankan parents.</span>
+    <span class="story-line">Moved to London when I was thirteen.</span>
+    <span class="story-line">It was difficult. Strange.</span>
+    <span class="story-line">I had to become the leader in my family overnight.</span>
+    <span class="story-line">Documents. Visas. Everything.</span>
+    <span class="story-line">I watched how much my parents sacrificed.</span>
+
+    <span class="story-break"></span>
+
+    <span class="story-line">I started trying things.</span>
+    <span class="story-accent">Got scammed.<br/>Got depressed.<br/>Nearly gave up on <em>everything.</em></span>
+    <span class="story-line">I started drinking just to fit in.</span>
+
+    <span class="story-break"></span>
+
+    <span class="story-line">When I was 17, I visited where my parents grew up.</span>
+    <span class="story-line">I call it my wake up.</span>
+    <span class="story-line">I came back and said: say yes to everything.</span>
+    <span class="story-line">See what happens.</span>
+
+    <span class="story-break"></span>
+
+    <span class="story-line">Three years later I'm still saying yes.</span>
+    <span class="story-line">I document my journey for the people who were where I was.</span>
+    <span class="story-line">Lost. No clue what they want. Afraid to try.</span>
+    <span class="story-line story-gold">My mission: create the voice I wish I had.</span>
+    <span class="story-line">The run is how I get the world to pay attention.</span>
+
+  </div>
+</section>
+
+
+<!-- ═══ SLIDE 3: VISION ═════════════════════════ -->
+<section class="slide" id="vision">
+
+  <div class="vision-hdr">
+    <span class="eyebrow" style="display:block;text-align:center;">What this starts</span>
+    <h2 class="vision-h">The Vision.</h2>
+    <p class="vision-sub">The run is the beginning. Not the goal.</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-num">01</div>
+      <div class="card-title">The Run Clubs</div>
+      <p class="card-body">Five clubs launched while running — one for each community across the island. With Nūl, they become permanent. Not a one-off event.</p>
+    </div>
+    <div class="card">
+      <div class="card-num">02</div>
+      <div class="card-title">Retreats &amp; Masterminds</div>
+      <p class="card-body">For the diaspora — people like me, who grew up abroad. Hosted on Nūl's land in Sri Lanka. The room I never found.</p>
+    </div>
+    <div class="card">
+      <div class="card-num">03</div>
+      <div class="card-title">4Lanka Marathon</div>
+      <p class="card-body">An annual marathon — Sri Lanka and the diaspora on the same finish line. One step at a time. This is the long game.</p>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ═══ SLIDE 4: JOIN ═══════════════════════════ -->
+<section class="slide" id="join">
+  <div class="join-inner">
+
+    <span class="eyebrow">Follow the run</span>
+    <h2 class="join-h">Follow it<br/>from day one.</h2>
+    <p class="join-sub">I'll write from training, from the road.</p>
+    <p class="join-sub">The real stuff. Nothing filtered.</p>
+
+    <form class="email-form" id="email-form" novalidate>
+      <div class="email-row">
+        <label for="email-in" style="position:absolute;opacity:0;pointer-events:none;">Email</label>
+        <input id="email-in" class="email-input" type="email" name="email"
+               placeholder="your@email.com" required autocomplete="email"/>
+        <button type="submit" class="btn">COUNT ME IN</button>
       </div>
-    </div>
+      <p class="form-error" id="form-error" aria-live="polite"></p>
+      <p class="form-note">No spam. Just the run.</p>
+    </form>
 
-    <!-- Scroll cue -->
-    <div class="scroll-cue" aria-hidden="true">
-      <span class="scroll-cue-text">Read the story</span>
-      <span class="scroll-cue-line"></span>
-    </div>
-
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       SECTION 2 — MY STORY
-       Edit copy inside .story-line and .story-accent elements
-       ═══════════════════════════════════════════ -->
-  <section class="section" id="story">
-    <div class="story-inner">
-
-      <h2 class="story-headline">Why I'm<br/>Doing This.</h2>
-
-      <span class="story-line">Born in Rome to Sri Lankan parents.</span>
-      <span class="story-line">Moved to London when I was thirteen.</span>
-      <span class="story-line">It was difficult. Strange. I had to become the leader in my family overnight.</span>
-      <span class="story-line">Documents. Visas. Everything.</span>
-      <span class="story-line">I watched how much my parents sacrificed.</span>
-
-      <span class="story-accent">I started trying things.<br/>Got scammed. Got depressed.<br/>Nearly gave up on <em>everything.</em></span>
-
-      <span class="story-line">I started drinking just to fit in.</span>
-      <span class="story-line">Then at 17 I visited where my parents grew up. I call it my wake up.</span>
-      <span class="story-line">I came back and said: say yes to everything. See what happens.</span>
-      <span class="story-line">Three years later I'm still saying yes.</span>
-      <span class="story-line">Now I document my journey for the people who were where I was.</span>
-      <span class="story-line">Lost. No clue what they want. Afraid to try.</span>
-      <span class="story-line story-gold">My mission: create the voice I wish I had.</span>
-      <span class="story-line">The run is how I get the world to pay attention.</span>
-
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       SECTION 3 — THE VISION
-       Edit card titles, bodies, and numbers below
-       ═══════════════════════════════════════════ -->
-  <section class="section" id="vision">
-
-    <div class="vision-header">
-      <span class="eyebrow" style="text-align:center;display:block;">What this starts</span>
-      <h2 class="vision-headline">The Vision.</h2>
-      <p class="vision-sub">The run is the beginning. Not the goal.</p>
+    <div class="join-success" id="join-success">
+      <h3 class="success-h">You're in.</h3>
+      <p class="success-body">I'll write from training, from the road.<br/>Everything from day one.</p>
     </div>
 
-    <div class="cards">
-
-      <div class="card">
-        <div class="card-num">01</div>
-        <div class="card-title">The Run Clubs</div>
-        <p class="card-body">
-          Five clubs launched while running — one for each community across the island. With Nūl, they become permanent infrastructure. Not a one-off event.
-        </p>
+    <div class="join-divider">
+      <p class="donate-line">
+        Or <a href="https://givestar.io/gs/the-voice-i-wish-i-had-a-lap-of-sri-lanka"
+             target="_blank" rel="noopener noreferrer">support the run directly →</a>
+      </p>
+      <div class="social-row">
+        <a href="https://instagram.com/sash.jm" target="_blank" rel="noopener noreferrer">@sash.jm</a>
+        <a href="mailto:sashj.enquiry@yahoo.com">Email Sash</a>
       </div>
-
-      <div class="card">
-        <div class="card-num">02</div>
-        <div class="card-title">Retreats &amp; Masterminds</div>
-        <p class="card-body">
-          For the diaspora — people like me, who grew up abroad and lost the thread back to their culture. Hosted on Nūl's land in Sri Lanka. The room I never found.
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-num">03</div>
-        <div class="card-title">4Lanka Marathon</div>
-        <p class="card-body">
-          An annual marathon — Sri Lanka and the diaspora on the same finish line. One step at a time. This is the long game.
-        </p>
-      </div>
-
     </div>
 
-  </section>
+  </div>
+</section>
+
+<footer>© 2026 Sash Jayasinghe · Lanka Lap</footer>
 
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 4 — JOIN THE WAITLIST
-       Kit API key + form ID configured in the JS below
-       ═══════════════════════════════════════════ -->
-  <section class="section" id="join">
-    <div class="join-inner">
+<script>
+  /* ── CONFIG ───────────────────────────────────── */
+  const KIT_API_KEY = 'aqaYfs33X9Kwc5fG_0CXug';
+  const KIT_FORM_ID = '9353779';
+  const RUN_START   = new Date('2026-07-01T00:00:00+05:30');
 
-      <span class="eyebrow">Follow the run</span>
-      <h2 class="join-headline">Join The<br/>Journey.</h2>
-      <p class="join-sub">Get behind-the-scenes access as we build this.</p>
-      <p class="join-sub">From training, from the road. The real stuff.</p>
+  /* ── COUNTDOWN ────────────────────────────────── */
+  const pad = n => String(Math.floor(n)).padStart(2,'0');
+  (function tick() {
+    const diff = RUN_START - Date.now();
+    if (diff <= 0) return;
+    document.getElementById('cd-d').textContent = pad(diff / 86400000);
+    document.getElementById('cd-h').textContent = pad((diff % 86400000) / 3600000);
+    document.getElementById('cd-m').textContent = pad((diff % 3600000) / 60000);
+    document.getElementById('cd-s').textContent = pad((diff % 60000) / 1000);
+    setTimeout(tick, 1000);
+  })();
 
-      <!-- Email form -->
-      <form class="email-form" id="email-form" novalidate>
-        <div class="email-row">
-          <label for="email-input" style="position:absolute;opacity:0;pointer-events:none;">Email address</label>
-          <input
-            id="email-input"
-            class="email-input"
-            type="email"
-            name="email"
-            placeholder="your@email.com"
-            autocomplete="email"
-            required
-          />
-          <button type="submit" class="btn-submit">COUNT ME IN</button>
-        </div>
-        <p class="form-error" id="form-error" aria-live="polite"></p>
-        <p class="form-note">No spam. Just the run.</p>
-      </form>
+  /* ── ISLAND ANIMATION ─────────────────────────── */
+  window.addEventListener('load', () => {
+    if (typeof gsap === 'undefined') return;
+    gsap.registerPlugin(MotionPathPlugin);
 
-      <!-- Success state (shown after submit) -->
-      <div class="join-success" id="join-success">
-        <h3 class="success-headline">You're In.</h3>
-        <p class="success-body">
-          I'll write from training, from the road.<br/>
-          Everything from day one. See you out there.
-        </p>
-      </div>
+    const coast  = document.getElementById('coast');
+    const dot    = document.getElementById('dot');
+    const cpulse = document.getElementById('cpulse');
+    const len    = coast.getTotalLength();
 
-      <div class="join-divider">
-        <p class="donate-link">
-          Or <a href="https://givestar.io/gs/the-voice-i-wish-i-had-a-lap-of-sri-lanka" target="_blank" rel="noopener noreferrer">support the run directly →</a>
-        </p>
-        <div class="social-row">
-          <a href="https://instagram.com/sash.jm" target="_blank" rel="noopener noreferrer">@sash.jm</a>
-          <a href="mailto:sashj.enquiry@yahoo.com">Email Sash</a>
-          <span style="color:var(--muted);opacity:0.4;font-size:0.66rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">In partnership with Nūl</span>
-        </div>
-      </div>
+    coast.style.strokeDasharray  = len;
+    coast.style.strokeDashoffset = len;
 
-    </div>
-  </section>
+    /* Colombo pulse */
+    gsap.to(cpulse, { attr:{ r:15 }, opacity:0, duration:2, repeat:-1, ease:'power2.out', delay:0.5 });
 
-  <footer>© 2026 Sash Jayasinghe · Lanka Lap</footer>
+    /* Ease matching Emil's custom curve: cubic-bezier(0.23,1,0.32,1) */
+    const easeOut = 'power3.out';
 
-
-  <script>
-    /* ─────────────────────────────────────────────
-       CONFIGURATION — edit these
-       ───────────────────────────────────────────── */
-    const KIT_API_KEY = 'aqaYfs33X9Kwc5fG_0CXug';
-    const KIT_FORM_ID = '9353779'; // numeric form ID (not the embed slug)
-    const RUN_DATE    = new Date('2026-07-01T00:00:00+05:30');
-
-    /* ─────────────────────────────────────────────
-       ISLAND ANIMATION
-       ───────────────────────────────────────────── */
-    const coastPath = document.getElementById('coast-path');
-    const runDot    = document.getElementById('run-dot');
-    const pathLen   = coastPath.getTotalLength();
-
-    // Prep the stroke draw-on effect
-    coastPath.style.strokeDasharray  = pathLen;
-    coastPath.style.strokeDashoffset = pathLen;
-
-    // Colombo pulse ring
-    let pulseR = 7, pulseDir = 1;
-    setInterval(() => {
-      pulseR += pulseDir * 0.18;
-      if (pulseR > 14 || pulseR < 7) { pulseDir *= -1; }
-      const el = document.getElementById('colombo-pulse');
-      if (el) {
-        el.setAttribute('r', pulseR);
-        el.setAttribute('opacity', (14 - pulseR) / 7 * 0.6);
-      }
-    }, 30);
-
-    // Animate coastline trace then running dot
-    let progress = 0;
-    let dotProgress = 0;
-    let coastDone = false;
-    const COAST_DUR = 2200; // ms
-    const DOT_DUR   = 2800; // ms
-    let startTime = null;
-
-    function easeInOut(t) {
-      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-    }
-
-    function animateCoast(ts) {
-      if (!startTime) startTime = ts;
-      const elapsed = ts - startTime;
-      const t = Math.min(elapsed / COAST_DUR, 1);
-      const eased = easeInOut(t);
-      coastPath.style.strokeDashoffset = pathLen * (1 - eased);
-      if (t < 1) {
-        requestAnimationFrame(animateCoast);
-      } else {
-        coastDone = true;
-        runDot.setAttribute('opacity', '1');
-        startTime = null;
-        requestAnimationFrame(animateDot);
-      }
-    }
-
-    function animateDot(ts) {
-      if (!startTime) startTime = ts;
-      const elapsed = ts - startTime;
-      const t = Math.min(elapsed / DOT_DUR, 1);
-      const eased = easeInOut(t);
-      const pt = coastPath.getPointAtLength(eased * pathLen);
-      runDot.setAttribute('cx', pt.x);
-      runDot.setAttribute('cy', pt.y);
-      if (t < 1) {
-        requestAnimationFrame(animateDot);
-      } else {
-        // Pulse the dot at finish
-        let dotScale = 1;
-        let dotDir = 1;
-        setInterval(() => {
-          dotScale += dotDir * 0.04;
-          if (dotScale > 1.4 || dotScale < 0.8) dotDir *= -1;
-          runDot.setAttribute('r', 3.5 * dotScale);
-          runDot.setAttribute('opacity', 0.5 + 0.3 * (dotScale - 0.8) / 0.6);
-        }, 40);
-      }
-    }
-
-    // Hero text fade in after brief delay
-    setTimeout(() => {
-      requestAnimationFrame(animateCoast);
-      const heroText = document.getElementById('hero-text');
-      heroText.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      heroText.style.transform = 'translateY(16px)';
-      heroText.style.opacity = '0';
-      setTimeout(() => {
-        heroText.style.opacity = '1';
-        heroText.style.transform = 'translateY(0)';
-      }, 1200);
-
-      const cd = document.getElementById('countdown');
-      cd.style.transition = 'opacity 0.5s 1.6s ease';
-      setTimeout(() => { cd.style.opacity = '1'; }, 100);
-    }, 300);
-
-    /* ─────────────────────────────────────────────
-       COUNTDOWN
-       ───────────────────────────────────────────── */
-    function pad(n) { return String(Math.floor(n)).padStart(2, '0'); }
-
-    (function tick() {
-      const diff = RUN_DATE - new Date();
-      if (diff <= 0) {
-        document.getElementById('countdown').textContent = 'The run has begun.';
-        return;
-      }
-      document.getElementById('cd-d').textContent = pad(diff / 86400000);
-      document.getElementById('cd-h').textContent = pad((diff % 86400000) / 3600000);
-      document.getElementById('cd-m').textContent = pad((diff % 3600000) / 60000);
-      document.getElementById('cd-s').textContent = pad((diff % 60000) / 1000);
-      setTimeout(tick, 1000);
-    })();
-
-    /* ─────────────────────────────────────────────
-       SCROLL REVEAL — story lines + vision cards
-       ───────────────────────────────────────────── */
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (!entry.isIntersecting) return;
-
-        const el = entry.target;
-        const delay = el.dataset.delay || 0;
-
-        setTimeout(() => {
-          el.classList.add('visible');
-        }, delay);
-
-        revealObserver.unobserve(el);
-      });
-    }, { threshold: 0.15 });
-
-    // Story headline
-    revealObserver.observe(document.querySelector('.story-headline'));
-
-    // Story lines — stagger each by 80ms
-    document.querySelectorAll('.story-line, .story-accent').forEach((el, i) => {
-      el.dataset.delay = i * 80;
-      revealObserver.observe(el);
-    });
-
-    // Vision header + cards
-    revealObserver.observe(document.querySelector('.vision-header'));
-    document.querySelectorAll('.card').forEach((card, i) => {
-      card.dataset.delay = i * 120;
-      revealObserver.observe(card);
-    });
-
-    // Join section
-    revealObserver.observe(document.querySelector('.join-inner'));
-
-    /* ─────────────────────────────────────────────
-       EMAIL FORM — Kit (ConvertKit) integration
-       To swap providers: change the fetch() target and body format
-       ───────────────────────────────────────────── */
-    document.getElementById('email-form').addEventListener('submit', async function (e) {
-      e.preventDefault();
-
-      const form    = this;
-      const input   = document.getElementById('email-input');
-      const btn     = form.querySelector('.btn-submit');
-      const errorEl = document.getElementById('form-error');
-      const email   = input.value.trim();
-
-      // Client-side email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        errorEl.textContent = 'Please enter a valid email address.';
-        input.focus();
-        return;
-      }
-
-      // Loading state
-      errorEl.textContent = '';
-      btn.textContent = '...';
-      btn.disabled = true;
-
-      try {
-        const res = await fetch(
-          `https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ api_key: KIT_API_KEY, email }),
-          }
-        );
-
-        const data = await res.json();
-
-        if (res.ok && data.subscription) {
-          // Show success state
-          form.classList.add('hide');
-          document.getElementById('join-success').classList.add('show');
-        } else {
-          throw new Error('Subscription failed');
+    const tl = gsap.timeline();
+    tl
+      .to(coast, { strokeDashoffset:0, duration:2, ease:easeOut }, 0.2)
+      .to(dot, { opacity:1, duration:0.15 }, 0.4)
+      .to({ p:0 }, {
+        p:1, duration:2.6, ease:'power1.inOut',
+        onUpdate() {
+          const pt = coast.getPointAtLength(this.targets()[0].p * len);
+          dot.setAttribute('cx', pt.x);
+          dot.setAttribute('cy', pt.y);
+        },
+        onComplete() {
+          gsap.to(dot, { attr:{ r:5 }, opacity:0.65, duration:0.9, repeat:-1, yoyo:true, ease:'sine.inOut' });
         }
-      } catch {
-        errorEl.textContent = 'Something went wrong. Please try again.';
-        btn.textContent = 'COUNT ME IN';
-        btn.disabled = false;
-      }
+      }, 0.4);
+
+    /* Reveal hero after coast draws */
+    setTimeout(() => {
+      document.getElementById('hero-text').classList.add('visible');
+      document.getElementById('cd').classList.add('visible');
+      document.querySelectorAll('.chip').forEach((c,i) => {
+        setTimeout(() => c.classList.add('visible'), i * 120);
+      });
+      setTimeout(() => document.getElementById('scroll-cue').classList.add('visible'), 1200);
+    }, 1000);
+  });
+
+  /* Fallback: if GSAP hasn't loaded after 3s, show hero text anyway */
+  setTimeout(() => {
+    const ht = document.getElementById('hero-text');
+    if (ht && !ht.classList.contains('visible')) {
+      ht.classList.add('visible');
+      document.getElementById('cd').classList.add('visible');
+      document.querySelectorAll('.chip').forEach(c => c.classList.add('visible'));
+      document.getElementById('scroll-cue').classList.add('visible');
+    }
+  }, 3000);
+
+  /* ── SCROLL REVEALS ───────────────────────────── */
+  /* Emil: elements enter from scale(0.97) + opacity 0 — handled in CSS */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('visible');
+      io.unobserve(entry.target);
     });
-  </script>
+  }, { threshold: 0.12 });
+
+  /* Story: stagger each line by 60ms */
+  const lines = document.querySelectorAll('.story-line, .story-accent, .story-h');
+  lines.forEach((el, i) => {
+    el.style.transitionDelay = `${i * 60}ms`;
+    io.observe(el);
+  });
+
+  /* Vision */
+  io.observe(document.querySelector('.vision-hdr'));
+  document.querySelectorAll('.card').forEach(c => io.observe(c));
+
+  /* Join */
+  io.observe(document.querySelector('.join-inner'));
+
+  /* ── EMAIL FORM ───────────────────────────────── */
+  document.getElementById('email-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn     = e.target.querySelector('.btn');
+    const input   = document.getElementById('email-in');
+    const errorEl = document.getElementById('form-error');
+    const email   = input.value.trim();
+
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!re.test(email)) {
+      errorEl.textContent = 'Please enter a valid email address.';
+      input.focus();
+      return;
+    }
+
+    errorEl.textContent = '';
+    btn.textContent = '...';
+    btn.disabled = true;
+
+    try {
+      const res  = await fetch(`https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ api_key: KIT_API_KEY, email })
+      });
+      const data = await res.json();
+
+      if (res.ok && data.subscription) {
+        document.getElementById('email-form').classList.add('hide');
+        document.getElementById('join-success').classList.add('show');
+      } else {
+        throw new Error();
+      }
+    } catch {
+      errorEl.textContent = 'Something went wrong. Please try again.';
+      btn.textContent = 'COUNT ME IN';
+      btn.disabled = false;
+    }
+  });
+</script>
 
 </body>
 </html>
