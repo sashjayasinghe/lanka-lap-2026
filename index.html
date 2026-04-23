@@ -2,258 +2,458 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lanka Lap 2026 — Sash Jayasinghe</title>
   <meta name="description" content="On July 1, 2026, Sash Jayasinghe runs 1,400km around Sri Lanka's coastline. Follow it from day one." />
-  <meta property="og:title" content="Lanka Lap 2026 — Sash Jayasinghe" />
-  <meta property="og:description" content="On July 1, I run 1,400km around Sri Lanka's coastline. 30 days. Nobody has done this." />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='1' fill='%238D153A' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
 
   <style>
+    /* ─────────────────────────────────────────────
+       DESIGN TOKENS — edit these to change palette
+       ───────────────────────────────────────────── */
     :root {
-      --bg:      #06000A;
-      --crimson: #8D153A;
-      --saffron: #F5A800;
-      --green:   #006533;
-      --orange:  #E87722;
-      --white:   #F0EBE3;
-      --muted:   #7A7079;
+      --bg:       #06000A;    /* near-black */
+      --surface:  #0F080F;    /* cards / lifted surface */
+      --crimson:  #8D153A;    /* Sri Lanka red — primary accent */
+      --saffron:  #F5A800;    /* Sri Lanka gold — highlight */
+      --orange:   #E87722;    /* warm accent for stats / CTAs */
+      --green:    #006533;    /* Sri Lanka green — flag stripe */
+      --white:    #F0EBE3;    /* warm white — all body text */
+      --muted:    #6B616B;    /* secondary text */
+      --border:   rgba(240,235,227,0.07);
     }
 
+    /* ─────────────────────────────────────────────
+       RESET + BASE
+       ───────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html {
       scroll-snap-type: y mandatory;
       overflow-y: scroll;
       height: 100%;
+      scroll-behavior: smooth;
     }
 
     body {
       background: var(--bg);
       color: var(--white);
       font-family: 'Source Sans 3', sans-serif;
+      font-size: 16px;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Flag stripe */
+    h1, h2, h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.04em;
+      line-height: 0.9;
+    }
+
+    /* ─────────────────────────────────────────────
+       FLAG STRIPE — top of page
+       ───────────────────────────────────────────── */
     .flag {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; height: 3px;
     }
-    .flag s { display: block; }
-    .flag s:nth-child(1) { background: var(--green);   flex: 1; }
-    .flag s:nth-child(2) { background: var(--orange);  flex: 1; }
-    .flag s:nth-child(3) { background: var(--crimson); flex: 5; }
-    .flag s:nth-child(4) { background: var(--orange);  flex: 1; }
-    .flag s:nth-child(5) { background: var(--green);   flex: 1; }
+    .flag span { display: block; }
+    .flag span:nth-child(1) { background: var(--green);   flex: 1; }
+    .flag span:nth-child(2) { background: var(--orange);  flex: 1; }
+    .flag span:nth-child(3) { background: var(--crimson); flex: 5; }
+    .flag span:nth-child(4) { background: var(--orange);  flex: 1; }
+    .flag span:nth-child(5) { background: var(--green);   flex: 1; }
 
-    /* Slides */
-    .slide {
+    /* ─────────────────────────────────────────────
+       SECTIONS — each takes exactly 100vh
+       ───────────────────────────────────────────── */
+    .section {
       scroll-snap-align: start;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 3rem 2rem;
+      position: relative;
     }
 
-    /* ── SLIDE 1: HOOK */
-    #hook {
+    /* Eyebrow label — small uppercase above headlines */
+    .eyebrow {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--crimson);
+      opacity: 0.7;
+      margin-bottom: 1.4rem;
+      display: block;
+    }
+
+
+    /* ═══════════════════════════════════════════
+       SECTION 1 — HERO
+       ═══════════════════════════════════════════ */
+    #hero {
       flex-direction: column;
       text-align: center;
-      padding: 5rem 2rem 4rem;
-      background: radial-gradient(ellipse at 50% 60%, rgba(20,6,30,1) 0%, var(--bg) 68%);
-      position: relative;
+      background: radial-gradient(ellipse at 50% 55%, rgba(22,6,32,1) 0%, var(--bg) 70%);
+      overflow: hidden;
     }
 
-    #island-wrap {
+    /* Island container — stats orbit around this */
+    .island-scene {
       position: relative;
-      width: min(160px, 38vw);
+      width: 280px;
+      height: 280px;
       margin-bottom: 2.8rem;
+      flex-shrink: 0;
     }
 
-    #cd-strip {
+    /* The SVG island itself, centered in the scene */
+    .island-svg {
       position: absolute;
-      bottom: -2.2rem; left: 50%;
-      transform: translateX(-50%);
-      display: flex; align-items: baseline; gap: 0.3rem;
-      white-space: nowrap; opacity: 0;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140px;
+      height: auto;
     }
-    .cd-n {
+
+    /* Floating stat chips orbiting the island */
+    .stat-chip {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+      opacity: 0;
+      animation: float-in 0.6s ease forwards, float-bob 5s ease-in-out infinite;
+    }
+    .stat-chip:nth-child(2) { top: 12%;  left:  4%; animation-delay: 1.2s, 1.2s; }
+    .stat-chip:nth-child(3) { top: 10%;  right: 6%; animation-delay: 1.5s, 1.5s; }
+    .stat-chip:nth-child(4) { bottom: 18%; left: 0%; animation-delay: 1.8s, 1.8s; }
+    .stat-chip:nth-child(5) { bottom: 20%; right: 2%; animation-delay: 2.1s, 2.1s; }
+
+    .stat-chip-n {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.2rem; color: var(--white);
-      min-width: 2ch; text-align: center;
-      font-variant-numeric: tabular-nums;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--saffron);
+      letter-spacing: 0.04em;
     }
-    .cd-l {
-      font-size: 0.38rem; font-weight: 700;
-      letter-spacing: 0.18em; text-transform: uppercase;
+    .stat-chip-l {
+      font-size: 0.48rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
       color: var(--muted);
-    }
-    .cd-dot {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.7rem; color: var(--crimson); opacity: 0.5;
+      white-space: nowrap;
     }
 
-    #hook-text { opacity: 0; }
-
-    .hook-date {
-      font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 0.36em; text-transform: uppercase;
-      color: var(--saffron); opacity: 0.85;
-      margin-bottom: 1rem;
+    @keyframes float-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float-bob {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-7px); }
     }
 
-    .hook-headline {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(4.5rem, 18vw, 10rem);
-      line-height: 0.82; letter-spacing: 0.01em;
-      margin-bottom: 1.4rem;
+    /* Hero text block */
+    #hero-text { opacity: 0; }
+
+    .hero-headline {
+      font-size: clamp(3.2rem, 13vw, 7.5rem);
+      line-height: 0.88;
+      margin-bottom: 1.2rem;
     }
 
-    .hook-sub {
-      font-size: clamp(1rem, 2.4vw, 1.15rem);
+    .hero-sub {
+      font-size: clamp(0.95rem, 2.4vw, 1.1rem);
       font-weight: 600;
       color: var(--white);
       line-height: 1.7;
-      max-width: 400px;
-      margin: 0 auto 0.6rem;
+      margin-bottom: 0.3rem;
     }
 
-    .hook-sub-muted {
-      font-size: clamp(0.82rem, 1.8vw, 0.92rem);
+    .hero-sub-muted {
+      font-size: clamp(0.8rem, 1.8vw, 0.88rem);
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* Countdown strip */
+    #countdown {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-top: 1.6rem;
+      opacity: 0;
+    }
+    .cd-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--white);
+      min-width: 2ch;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .cd-label {
+      font-size: 0.38rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .cd-sep {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.8rem;
+      color: var(--crimson);
+      opacity: 0.45;
+    }
+
+    /* Scroll indicator */
+    .scroll-cue {
+      position: absolute;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: cue-in 0.6s 2.8s ease forwards;
+    }
+    .scroll-cue-text {
+      font-size: 0.52rem;
+      font-weight: 700;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .scroll-cue-line {
+      width: 1px;
+      height: 30px;
+      background: linear-gradient(to bottom, var(--crimson), transparent);
+      animation: cue-pulse 2s 2.8s ease-in-out infinite;
+    }
+    @keyframes cue-in    { to { opacity: 1; } }
+    @keyframes cue-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+
+    /* ═══════════════════════════════════════════
+       SECTION 2 — STORY
+       ═══════════════════════════════════════════ */
+    #story {
+      align-items: flex-start;
+      padding: 5rem 2rem 4rem;
+    }
+
+    .story-inner {
+      max-width: 640px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .story-headline {
+      font-size: clamp(2.8rem, 8vw, 4.5rem);
+      margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .story-headline.visible { opacity: 1; transform: translateY(0); }
+
+    /* Each paragraph animates in separately */
+    .story-line {
+      font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.8;
+      display: block;
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .story-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Pull-quote style accent */
+    .story-accent {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      color: var(--white);
+      letter-spacing: 0.03em;
+      line-height: 1.05;
+      display: block;
+      margin: 2rem 0;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .story-accent.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .story-accent em {
+      color: var(--crimson);
+      font-style: normal;
+    }
+
+    .story-gold {
+      color: var(--saffron);
+    }
+
+
+    /* ═══════════════════════════════════════════
+       SECTION 3 — THE VISION
+       ═══════════════════════════════════════════ */
+    #vision {
+      flex-direction: column;
+      padding: 5rem 2rem 4rem;
+    }
+
+    .vision-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .vision-header.visible { opacity: 1; transform: translateY(0); }
+
+    .vision-headline {
+      font-size: clamp(2.8rem, 8vw, 5rem);
+      margin-bottom: 0.5rem;
+    }
+
+    .vision-sub {
+      font-size: clamp(0.9rem, 2vw, 1rem);
       font-weight: 600;
       color: var(--muted);
       letter-spacing: 0.04em;
     }
 
-    .scroll-hint {
-      position: absolute;
-      bottom: 2rem; left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.58rem; font-weight: 700;
-      letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--muted); opacity: 0;
-      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-    }
-    .scroll-hint::after {
-      content: '';
-      display: block;
-      width: 1px; height: 28px;
-      background: linear-gradient(to bottom, var(--crimson), transparent);
-    }
-
-    /* ── SLIDE 2: STORY */
-    #story {
-      align-items: flex-start;
-      padding: 6rem 2rem 5rem;
-    }
-
-    .story-inner {
-      max-width: 620px;
+    /* Cards grid */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
       width: 100%;
-      margin: 0 auto;
     }
 
-    .story-section {
-      margin-bottom: 3.5rem;
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem 1.6rem;
       opacity: 0;
       transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
     }
+    .card.visible { opacity: 1; transform: translateY(0); }
+    .card:nth-child(2) { transition-delay: 0.12s; }
+    .card:nth-child(3) { transition-delay: 0.24s; }
 
-    .eyebrow {
-      font-size: 0.58rem; font-weight: 700;
-      letter-spacing: 0.34em; text-transform: uppercase;
-      color: var(--crimson); opacity: 0.65;
-      margin-bottom: 1.6rem;
-    }
-
-    .line {
-      font-size: clamp(1.05rem, 2.6vw, 1.22rem);
-      font-weight: 600;
-      color: var(--white);
-      line-height: 1.8;
-      display: block;
-      margin-bottom: 1.3rem;
-    }
-
-    .line-accent {
+    .card-num {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2rem, 5.5vw, 3rem);
+      font-size: 2.2rem;
+      color: var(--crimson);
+      opacity: 0.35;
       line-height: 1;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.06em;
       color: var(--white);
-      letter-spacing: 0.03em;
-      display: block;
-      margin: 1.8rem 0;
-    }
-    .line-accent span { color: var(--crimson); }
-
-    .line-gold {
-      color: var(--saffron);
-      font-weight: 700;
+      margin-bottom: 0.8rem;
     }
 
-    /* ── SLIDE 3: CTA */
-    #cta {
+    .card-body {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* Stack cards vertically on mobile */
+    @media (max-width: 680px) {
+      .cards { grid-template-columns: 1fr; max-width: 500px; }
+    }
+
+
+    /* ═══════════════════════════════════════════
+       SECTION 4 — JOIN THE WAITLIST
+       ═══════════════════════════════════════════ */
+    #join {
       flex-direction: column;
       text-align: center;
       padding: 5rem 2rem 4rem;
-      background: radial-gradient(ellipse at 50% 100%, rgba(141,21,58,0.1) 0%, transparent 65%);
+      background: radial-gradient(ellipse at 50% 100%, rgba(141,21,58,0.1) 0%, transparent 60%);
     }
 
-    .cta-inner {
-      max-width: 440px;
+    .join-inner {
+      max-width: 460px;
       width: 100%;
       opacity: 0;
       transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .join-inner.visible { opacity: 1; transform: translateY(0); }
+
+    .join-headline {
+      font-size: clamp(3rem, 9vw, 5rem);
+      margin-bottom: 1.2rem;
     }
 
-    .cta-headline {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.8rem, 8vw, 4.5rem);
-      letter-spacing: 0.05em;
-      line-height: 0.92;
-      margin-bottom: 1.6rem;
-    }
-
-    .cta-sub {
+    .join-sub {
       font-size: clamp(0.95rem, 2.2vw, 1.05rem);
       font-weight: 600;
       color: var(--muted);
       line-height: 1.75;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Email form */
+    .email-form {
+      margin-top: 2rem;
     }
 
     .email-row {
       display: flex;
-      margin-top: 2rem;
-      border: 1px solid rgba(141,21,58,0.45);
+      border: 1px solid rgba(141,21,58,0.5);
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .email-row:focus-within {
       border-color: var(--saffron);
       box-shadow: 0 0 0 3px rgba(245,168,0,0.1);
     }
+
     .email-input {
       flex: 1;
       background: rgba(255,255,255,0.03);
       border: none;
       color: var(--white);
       font-family: 'Source Sans 3', sans-serif;
-      font-size: 0.95rem; font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 600;
       padding: 1rem 1.2rem;
       outline: none;
     }
-    .email-input::placeholder { color: rgba(240,235,227,0.2); }
+    .email-input::placeholder { color: rgba(240,235,227,0.18); }
 
-    .btn-join {
+    .btn-submit {
       background: var(--crimson);
       border: none;
       color: var(--white);
@@ -265,180 +465,350 @@
       white-space: nowrap;
       transition: background 0.2s;
     }
-    .btn-join:hover { background: #A8193F; }
+    .btn-submit:hover    { background: #A8193F; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Error state */
+    .form-error {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--orange);
+      margin-top: 0.6rem;
+      min-height: 1rem;
+      letter-spacing: 0.04em;
+    }
 
     .form-note {
-      font-size: 0.68rem; font-weight: 600;
-      color: var(--muted); letter-spacing: 0.06em;
+      font-size: 0.66rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.06em;
       margin-top: 1rem;
     }
 
-    .givestar {
+    /* Success state */
+    .join-success {
+      display: none;
+      padding: 2rem 0;
+    }
+    .join-success.show { display: block; }
+    .email-form.hide   { display: none; }
+
+    .success-headline {
+      font-size: clamp(2.4rem, 7vw, 3.5rem);
+      color: var(--saffron);
+      margin-bottom: 0.8rem;
+    }
+    .success-body {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.8;
+    }
+
+    /* Divider */
+    .join-divider {
       margin-top: 2.5rem;
       padding-top: 1.5rem;
-      border-top: 1px solid rgba(240,235,227,0.06);
-      font-size: 0.72rem; font-weight: 700;
+      border-top: 1px solid var(--border);
+    }
+
+    /* GiveStar donate link */
+    .donate-link {
+      font-size: 0.72rem;
+      font-weight: 700;
       letter-spacing: 0.08em;
       color: var(--muted);
+      margin-bottom: 1.2rem;
     }
-    .givestar a {
+    .donate-link a {
       color: var(--crimson);
       text-decoration: none;
       transition: color 0.2s;
     }
-    .givestar a:hover { color: var(--saffron); }
+    .donate-link a:hover { color: var(--saffron); }
 
+    /* Social links */
     .social-row {
-      margin-top: 1.4rem;
-      display: flex; gap: 1.5rem;
-      justify-content: center; flex-wrap: wrap;
+      display: flex;
+      justify-content: center;
+      gap: 1.8rem;
+      flex-wrap: wrap;
     }
     .social-row a {
-      font-size: 0.68rem; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none;
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
       transition: color 0.2s;
     }
     .social-row a:hover { color: var(--saffron); }
 
+    /* Footer */
     footer {
       text-align: center;
       padding: 2rem;
-      font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); opacity: 0.3;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.28;
       scroll-snap-align: none;
     }
 
+    /* ─────────────────────────────────────────────
+       MOBILE TWEAKS
+       ───────────────────────────────────────────── */
     @media (max-width: 480px) {
-      #story { padding: 5rem 1.5rem 4rem; }
-      .email-input { font-size: 0.9rem; }
+      .island-scene { width: 240px; height: 240px; }
+      .island-svg   { width: 120px; }
+      .stat-chip:nth-child(2) { top: 8%;   left:  0%; }
+      .stat-chip:nth-child(3) { top: 8%;   right: 0%; }
+      .stat-chip:nth-child(4) { bottom: 14%; left: 0%; }
+      .stat-chip:nth-child(5) { bottom: 14%; right: 0%; }
+      .email-row { flex-direction: column; }
+      .btn-submit { padding: 0.9rem; width: 100%; }
     }
   </style>
 </head>
 <body>
 
-  <div class="flag"><s></s><s></s><s></s><s></s><s></s></div>
+  <!-- Sri Lanka flag stripe -->
+  <div class="flag" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
 
 
-  <!-- SLIDE 1: HOOK -->
-  <section class="slide" id="hook">
+  <!-- ═══════════════════════════════════════════
+       SECTION 1 — HERO
+       ═══════════════════════════════════════════ -->
+  <section class="section" id="hero">
 
-    <div id="island-wrap" aria-hidden="true">
-      <svg viewBox="0 0 180 256" fill="none" style="width:100%;height:auto;display:block;">
+    <!-- Island with orbiting stats -->
+    <div class="island-scene" aria-hidden="true">
+
+      <!-- Stat chips — edit text here -->
+      <div class="stat-chip">
+        <span class="stat-chip-n">1,400</span>
+        <span class="stat-chip-l">Kilometres</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-chip-n">30</span>
+        <span class="stat-chip-l">Days</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-chip-n">5</span>
+        <span class="stat-chip-l">Run Clubs</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-chip-n">1</span>
+        <span class="stat-chip-l">Mission</span>
+      </div>
+
+      <!-- Sri Lanka coastline SVG -->
+      <svg class="island-svg" viewBox="0 0 180 256" fill="none">
         <defs>
-          <radialGradient id="g-t" cx="72" cy="110" r="105" gradientUnits="userSpaceOnUse">
+          <radialGradient id="island-grad" cx="72" cy="110" r="105" gradientUnits="userSpaceOnUse">
             <stop offset="0%"   stop-color="#2E4418"/>
             <stop offset="40%"  stop-color="#1A2C0C"/>
             <stop offset="100%" stop-color="#0C1606"/>
           </radialGradient>
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="b1"/>
-            <feGaussianBlur in="SourceGraphic" stdDeviation="8"   result="b2"/>
-            <feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+          <!-- Glow stays inside the SVG — no CSS filter on the element itself -->
+          <filter id="coast-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4"   result="b1"/>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10"  result="b2"/>
+            <feMerge>
+              <feMergeNode in="b2"/>
+              <feMergeNode in="b1"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
           </filter>
-          <filter id="dotglow" x="-150%" y="-150%" width="400%" height="400%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2.5"/>
+          <filter id="dot-glow" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
           </filter>
         </defs>
-        <path d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z" fill="url(#g-t)"/>
+
+        <!-- Island body -->
+        <path d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"
+              fill="url(#island-grad)"/>
+
+        <!-- Coastline — crimson trace with internal glow -->
         <path id="coast-path"
-          d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"
-          stroke="#8D153A" stroke-width="1.8" fill="none" filter="url(#glow)"/>
-        <circle id="colombo-ring" cx="20" cy="186" r="7" fill="none" stroke="rgba(245,168,0,0.5)" stroke-width="0.8"/>
-        <circle cx="20" cy="186" r="2.2" fill="rgba(245,168,0,0.8)"/>
-        <text x="27" y="190" font-family="'Source Sans 3',sans-serif" font-size="5" font-weight="700" fill="rgba(245,168,0,0.55)" letter-spacing="0.05em">COLOMBO</text>
-        <circle id="run-dot" cx="20" cy="186" r="3.5" fill="var(--saffron)" opacity="0" filter="url(#dotglow)"/>
+              d="M 20 186 C 24 206,38 226,53 238 C 66 246,80 250,96 250 C 118 244,140 232,155 218 C 166 204,169 188,167 174 C 164 158,158 144,151 132 C 140 116,132 100,125 85 C 118 68,106 56,94 43 C 94 40,93 30,87 22 C 75 10,60 4,51 8 C 44 10,36 18,33 28 C 30 38,28 50,26 60 C 22 74,20 96,18 120 C 16 142,16 166,20 186 Z"
+              stroke="#8D153A" stroke-width="1.8" fill="none" filter="url(#coast-glow)"/>
+
+        <!-- Colombo marker -->
+        <circle id="colombo-pulse" cx="20" cy="186" r="7" fill="none"
+                stroke="rgba(245,168,0,0.5)" stroke-width="0.8"/>
+        <circle cx="20" cy="186" r="2.2" fill="rgba(245,168,0,0.85)"/>
+        <text x="27" y="190"
+              font-family="'Source Sans 3',sans-serif" font-size="5"
+              font-weight="700" fill="rgba(245,168,0,0.5)" letter-spacing="0.05em">COLOMBO</text>
+
+        <!-- Running dot — animated along coastline by JS -->
+        <circle id="run-dot" cx="20" cy="186" r="3.5"
+                fill="#F5A800" opacity="0" filter="url(#dot-glow)"/>
       </svg>
 
-      <div id="cd-strip">
-        <div class="cd-n" id="cd-d">--</div><div class="cd-l">d</div>
-        <div class="cd-dot">·</div>
-        <div class="cd-n" id="cd-h">--</div><div class="cd-l">h</div>
-        <div class="cd-dot">·</div>
-        <div class="cd-n" id="cd-m">--</div><div class="cd-l">m</div>
-        <div class="cd-dot">·</div>
-        <div class="cd-n" id="cd-s">--</div><div class="cd-l">s</div>
+    </div>
+    <!-- /island-scene -->
+
+    <!-- Hero text -->
+    <div id="hero-text">
+      <p class="eyebrow">July 1, 2026 · Sri Lanka</p>
+      <h1 class="hero-headline">
+        The Run Is Just<br/>
+        <span style="color:var(--crimson);">The Beginning.</span>
+      </h1>
+      <p class="hero-sub">I'm running a full lap of Sri Lanka.</p>
+      <p class="hero-sub-muted">1,400km. 30 days. Nobody has done this.</p>
+
+      <!-- Live countdown -->
+      <div id="countdown">
+        <div class="cd-num" id="cd-d">--</div><div class="cd-label">d</div>
+        <div class="cd-sep">·</div>
+        <div class="cd-num" id="cd-h">--</div><div class="cd-label">h</div>
+        <div class="cd-sep">·</div>
+        <div class="cd-num" id="cd-m">--</div><div class="cd-label">m</div>
+        <div class="cd-sep">·</div>
+        <div class="cd-num" id="cd-s">--</div><div class="cd-label">s</div>
       </div>
     </div>
 
-    <div id="hook-text">
-      <p class="hook-date">July 1, 2026 · Sri Lanka</p>
-      <h1 class="hook-headline">1,400<span style="color:var(--crimson);">KM</span></h1>
-      <p class="hook-sub">I'm running a full lap of Sri Lanka.</p>
-      <p class="hook-sub-muted">Nobody has done this. Here's why I am.</p>
+    <!-- Scroll cue -->
+    <div class="scroll-cue" aria-hidden="true">
+      <span class="scroll-cue-text">Read the story</span>
+      <span class="scroll-cue-line"></span>
     </div>
-
-    <div class="scroll-hint" id="scroll-hint">Read the story</div>
 
   </section>
 
 
-  <!-- SLIDE 2: STORY -->
-  <section class="slide" id="story">
+  <!-- ═══════════════════════════════════════════
+       SECTION 2 — MY STORY
+       Edit copy inside .story-line and .story-accent elements
+       ═══════════════════════════════════════════ -->
+  <section class="section" id="story">
     <div class="story-inner">
 
-      <div class="story-section">
-        <p class="eyebrow">Who I am</p>
-        <span class="line">Born in Rome to Sri Lankan parents.</span>
-        <span class="line">Moved to London when I was thirteen.</span>
-        <span class="line">It was difficult. Strange.</span>
-        <span class="line">I had to become the leader in my family overnight.</span>
-        <span class="line">Documents. Visas. Everything.</span>
-        <span class="line">I watched how much my parents sacrificed.</span>
-      </div>
+      <h2 class="story-headline">Why I'm<br/>Doing This.</h2>
 
-      <div class="story-section">
-        <p class="eyebrow">The hard part</p>
-        <span class="line">I started trying things.</span>
-        <span class="line">Got scammed. Got depressed. Nearly gave up on everything.</span>
-        <span class="line">I started drinking just to fit in.</span>
-        <span class="line-accent">Then at 17 I visited<br/>where my parents<br/><span>grew up.</span></span>
-        <span class="line">I call it my wake up.</span>
-        <span class="line">I came back and said: say yes to everything.</span>
-        <span class="line">See what happens.</span>
-      </div>
+      <span class="story-line">Born in Rome to Sri Lankan parents.</span>
+      <span class="story-line">Moved to London when I was thirteen.</span>
+      <span class="story-line">It was difficult. Strange. I had to become the leader in my family overnight.</span>
+      <span class="story-line">Documents. Visas. Everything.</span>
+      <span class="story-line">I watched how much my parents sacrificed.</span>
 
-      <div class="story-section">
-        <p class="eyebrow">The mission</p>
-        <span class="line">Three years later I'm still saying yes.</span>
-        <span class="line">Now I document my journey for the people who were where I was.</span>
-        <span class="line">Lost. No clue what they want. Afraid to try.</span>
-        <span class="line">My mission is simple.</span>
-        <span class="line line-gold">Create the voice I wish I had.</span>
-        <span class="line">The run is how I get the world to pay attention.</span>
-      </div>
+      <span class="story-accent">I started trying things.<br/>Got scammed. Got depressed.<br/>Nearly gave up on <em>everything.</em></span>
+
+      <span class="story-line">I started drinking just to fit in.</span>
+      <span class="story-line">Then at 17 I visited where my parents grew up. I call it my wake up.</span>
+      <span class="story-line">I came back and said: say yes to everything. See what happens.</span>
+      <span class="story-line">Three years later I'm still saying yes.</span>
+      <span class="story-line">Now I document my journey for the people who were where I was.</span>
+      <span class="story-line">Lost. No clue what they want. Afraid to try.</span>
+      <span class="story-line story-gold">My mission: create the voice I wish I had.</span>
+      <span class="story-line">The run is how I get the world to pay attention.</span>
 
     </div>
   </section>
 
 
-  <!-- SLIDE 3: CTA -->
-  <section class="slide" id="cta">
-    <div class="cta-inner">
+  <!-- ═══════════════════════════════════════════
+       SECTION 3 — THE VISION
+       Edit card titles, bodies, and numbers below
+       ═══════════════════════════════════════════ -->
+  <section class="section" id="vision">
 
-      <h2 class="cta-headline">Follow it<br/>from day one.</h2>
-      <p class="cta-sub">I'll write from training, from the road.</p>
-      <p class="cta-sub">The real stuff. Nothing filtered.</p>
+    <div class="vision-header">
+      <span class="eyebrow" style="text-align:center;display:block;">What this starts</span>
+      <h2 class="vision-headline">The Vision.</h2>
+      <p class="vision-sub">The run is the beginning. Not the goal.</p>
+    </div>
 
-      <form id="email-form">
-        <div class="email-row">
-          <label for="email-in" style="position:absolute;opacity:0;pointer-events:none;">Email address</label>
-          <input id="email-in" class="email-input" type="email" name="email"
-                 placeholder="your@email.com" required autocomplete="email"/>
-          <button type="submit" class="btn-join">COUNT ME IN</button>
-        </div>
-      </form>
+    <div class="cards">
 
-      <p class="form-note">No spam. Just the run.</p>
-
-      <div class="givestar">
-        Or <a href="https://givestar.io/gs/the-voice-i-wish-i-had-a-lap-of-sri-lanka" target="_blank" rel="noopener noreferrer">support the run directly →</a>
+      <div class="card">
+        <div class="card-num">01</div>
+        <div class="card-title">The Run Clubs</div>
+        <p class="card-body">
+          Five clubs launched while running — one for each community across the island. With Nūl, they become permanent infrastructure. Not a one-off event.
+        </p>
       </div>
 
-      <div class="social-row">
-        <a href="https://instagram.com/sash.jm" target="_blank" rel="noopener noreferrer">@sash.jm</a>
-        <a href="mailto:sashj.enquiry@yahoo.com">Email Sash</a>
+      <div class="card">
+        <div class="card-num">02</div>
+        <div class="card-title">Retreats &amp; Masterminds</div>
+        <p class="card-body">
+          For the diaspora — people like me, who grew up abroad and lost the thread back to their culture. Hosted on Nūl's land in Sri Lanka. The room I never found.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-num">03</div>
+        <div class="card-title">4Lanka Marathon</div>
+        <p class="card-body">
+          An annual marathon — Sri Lanka and the diaspora on the same finish line. One step at a time. This is the long game.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 4 — JOIN THE WAITLIST
+       Kit API key + form ID configured in the JS below
+       ═══════════════════════════════════════════ -->
+  <section class="section" id="join">
+    <div class="join-inner">
+
+      <span class="eyebrow">Follow the run</span>
+      <h2 class="join-headline">Join The<br/>Journey.</h2>
+      <p class="join-sub">Get behind-the-scenes access as we build this.</p>
+      <p class="join-sub">From training, from the road. The real stuff.</p>
+
+      <!-- Email form -->
+      <form class="email-form" id="email-form" novalidate>
+        <div class="email-row">
+          <label for="email-input" style="position:absolute;opacity:0;pointer-events:none;">Email address</label>
+          <input
+            id="email-input"
+            class="email-input"
+            type="email"
+            name="email"
+            placeholder="your@email.com"
+            autocomplete="email"
+            required
+          />
+          <button type="submit" class="btn-submit">COUNT ME IN</button>
+        </div>
+        <p class="form-error" id="form-error" aria-live="polite"></p>
+        <p class="form-note">No spam. Just the run.</p>
+      </form>
+
+      <!-- Success state (shown after submit) -->
+      <div class="join-success" id="join-success">
+        <h3 class="success-headline">You're In.</h3>
+        <p class="success-body">
+          I'll write from training, from the road.<br/>
+          Everything from day one. See you out there.
+        </p>
+      </div>
+
+      <div class="join-divider">
+        <p class="donate-link">
+          Or <a href="https://givestar.io/gs/the-voice-i-wish-i-had-a-lap-of-sri-lanka" target="_blank" rel="noopener noreferrer">support the run directly →</a>
+        </p>
+        <div class="social-row">
+          <a href="https://instagram.com/sash.jm" target="_blank" rel="noopener noreferrer">@sash.jm</a>
+          <a href="mailto:sashj.enquiry@yahoo.com">Email Sash</a>
+          <span style="color:var(--muted);opacity:0.4;font-size:0.66rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">In partnership with Nūl</span>
+        </div>
       </div>
 
     </div>
@@ -448,90 +818,208 @@
 
 
   <script>
-    gsap.registerPlugin(MotionPathPlugin);
+    /* ─────────────────────────────────────────────
+       CONFIGURATION — edit these
+       ───────────────────────────────────────────── */
+    const KIT_API_KEY = 'aqaYfs33X9Kwc5fG_0CXug';
+    const KIT_FORM_ID = '65aa1813a8';
+    const RUN_DATE    = new Date('2026-07-01T00:00:00+05:30');
 
-    /* Countdown */
-    (function tick() {
-      const diff = new Date('2026-07-01T00:00:00+05:30') - new Date();
-      if (diff <= 0) return;
-      const pad = n => String(n).padStart(2,'0');
-      document.getElementById('cd-d').textContent = pad(Math.floor(diff / 86400000));
-      document.getElementById('cd-h').textContent = pad(Math.floor((diff % 86400000) / 3600000));
-      document.getElementById('cd-m').textContent = pad(Math.floor((diff % 3600000) / 60000));
-      document.getElementById('cd-s').textContent = pad(Math.floor((diff % 60000) / 1000));
-      setTimeout(tick, 1000);
-    })();
-
-    /* Island animation */
+    /* ─────────────────────────────────────────────
+       ISLAND ANIMATION
+       ───────────────────────────────────────────── */
     const coastPath = document.getElementById('coast-path');
     const runDot    = document.getElementById('run-dot');
     const pathLen   = coastPath.getTotalLength();
+
+    // Prep the stroke draw-on effect
     coastPath.style.strokeDasharray  = pathLen;
     coastPath.style.strokeDashoffset = pathLen;
 
-    gsap.to('#colombo-ring', { attr:{ r:14 }, opacity:0, duration:2, repeat:-1, ease:'power2.out', delay:0.5 });
+    // Colombo pulse ring
+    let pulseR = 7, pulseDir = 1;
+    setInterval(() => {
+      pulseR += pulseDir * 0.18;
+      if (pulseR > 14 || pulseR < 7) { pulseDir *= -1; }
+      const el = document.getElementById('colombo-pulse');
+      if (el) {
+        el.setAttribute('r', pulseR);
+        el.setAttribute('opacity', (14 - pulseR) / 7 * 0.6);
+      }
+    }, 30);
 
-    const tl = gsap.timeline();
-    tl.to(coastPath, { strokeDashoffset:0, duration:2.2, ease:'power2.inOut' }, 0.2)
-      .to(runDot, { opacity:1, duration:0.2 }, 0.5)
-      .to({ p:0 }, {
-        p:1, duration:2.4, ease:'power1.inOut',
-        onUpdate: function() {
-          const pt = coastPath.getPointAtLength(this.targets()[0].p * pathLen);
-          runDot.setAttribute('cx', pt.x);
-          runDot.setAttribute('cy', pt.y);
-        },
-        onComplete: () => gsap.to(runDot, { attr:{ r:5 }, opacity:0.7, duration:0.8, repeat:-1, yoyo:true, ease:'sine.inOut' })
-      }, 0.5)
-      .fromTo('#cd-strip',    { opacity:0, y:6  }, { opacity:1, y:0, duration:0.4 }, 0.8)
-      .fromTo('#hook-text',   { opacity:0, y:18 }, { opacity:1, y:0, duration:0.55 }, 1.2)
-      .fromTo('#scroll-hint', { opacity:0 },       { opacity:1, duration:0.5 }, 2.0);
+    // Animate coastline trace then running dot
+    let progress = 0;
+    let dotProgress = 0;
+    let coastDone = false;
+    const COAST_DUR = 2200; // ms
+    const DOT_DUR   = 2800; // ms
+    let startTime = null;
 
-    /* Story section reveals */
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
+    function easeInOut(t) {
+      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    }
+
+    function animateCoast(ts) {
+      if (!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+      const t = Math.min(elapsed / COAST_DUR, 1);
+      const eased = easeInOut(t);
+      coastPath.style.strokeDashoffset = pathLen * (1 - eased);
+      if (t < 1) {
+        requestAnimationFrame(animateCoast);
+      } else {
+        coastDone = true;
+        runDot.setAttribute('opacity', '1');
+        startTime = null;
+        requestAnimationFrame(animateDot);
+      }
+    }
+
+    function animateDot(ts) {
+      if (!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+      const t = Math.min(elapsed / DOT_DUR, 1);
+      const eased = easeInOut(t);
+      const pt = coastPath.getPointAtLength(eased * pathLen);
+      runDot.setAttribute('cx', pt.x);
+      runDot.setAttribute('cy', pt.y);
+      if (t < 1) {
+        requestAnimationFrame(animateDot);
+      } else {
+        // Pulse the dot at finish
+        let dotScale = 1;
+        let dotDir = 1;
+        setInterval(() => {
+          dotScale += dotDir * 0.04;
+          if (dotScale > 1.4 || dotScale < 0.8) dotDir *= -1;
+          runDot.setAttribute('r', 3.5 * dotScale);
+          runDot.setAttribute('opacity', 0.5 + 0.3 * (dotScale - 0.8) / 0.6);
+        }, 40);
+      }
+    }
+
+    // Hero text fade in after brief delay
+    setTimeout(() => {
+      requestAnimationFrame(animateCoast);
+      const heroText = document.getElementById('hero-text');
+      heroText.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      heroText.style.transform = 'translateY(16px)';
+      heroText.style.opacity = '0';
+      setTimeout(() => {
+        heroText.style.opacity = '1';
+        heroText.style.transform = 'translateY(0)';
+      }, 1200);
+
+      const cd = document.getElementById('countdown');
+      cd.style.transition = 'opacity 0.5s 1.6s ease';
+      setTimeout(() => { cd.style.opacity = '1'; }, 100);
+    }, 300);
+
+    /* ─────────────────────────────────────────────
+       COUNTDOWN
+       ───────────────────────────────────────────── */
+    function pad(n) { return String(Math.floor(n)).padStart(2, '0'); }
+
+    (function tick() {
+      const diff = RUN_DATE - new Date();
+      if (diff <= 0) {
+        document.getElementById('countdown').textContent = 'The run has begun.';
+        return;
+      }
+      document.getElementById('cd-d').textContent = pad(diff / 86400000);
+      document.getElementById('cd-h').textContent = pad((diff % 86400000) / 3600000);
+      document.getElementById('cd-m').textContent = pad((diff % 3600000) / 60000);
+      document.getElementById('cd-s').textContent = pad((diff % 60000) / 1000);
+      setTimeout(tick, 1000);
+    })();
+
+    /* ─────────────────────────────────────────────
+       SCROLL REVEAL — story lines + vision cards
+       ───────────────────────────────────────────── */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
         if (!entry.isIntersecting) return;
-        gsap.to(entry.target, { opacity:1, y:0, duration:0.8, ease:'power3.out' });
-        io.unobserve(entry.target);
+
+        const el = entry.target;
+        const delay = el.dataset.delay || 0;
+
+        setTimeout(() => {
+          el.classList.add('visible');
+        }, delay);
+
+        revealObserver.unobserve(el);
       });
     }, { threshold: 0.15 });
 
-    document.querySelectorAll('.story-section').forEach((el, i) => {
-      el.style.transitionDelay = `${i * 0.1}s`;
-      io.observe(el);
+    // Story headline
+    revealObserver.observe(document.querySelector('.story-headline'));
+
+    // Story lines — stagger each by 80ms
+    document.querySelectorAll('.story-line, .story-accent').forEach((el, i) => {
+      el.dataset.delay = i * 80;
+      revealObserver.observe(el);
     });
 
-    const ctaIO = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        gsap.to('.cta-inner', { opacity:1, y:0, duration:0.8, ease:'power3.out' });
-        ctaIO.unobserve(entry.target);
-      });
-    }, { threshold: 0.2 });
-    ctaIO.observe(document.querySelector('.cta-inner'));
+    // Vision header + cards
+    revealObserver.observe(document.querySelector('.vision-header'));
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.dataset.delay = i * 120;
+      revealObserver.observe(card);
+    });
 
-    /* Kit form */
-    document.getElementById('email-form').addEventListener('submit', async e => {
+    // Join section
+    revealObserver.observe(document.querySelector('.join-inner'));
+
+    /* ─────────────────────────────────────────────
+       EMAIL FORM — Kit (ConvertKit) integration
+       To swap providers: change the fetch() target and body format
+       ───────────────────────────────────────────── */
+    document.getElementById('email-form').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const btn   = e.target.querySelector('.btn-join');
-      const email = document.getElementById('email-in').value.trim();
-      btn.textContent = '...'; btn.disabled = true;
+
+      const form    = this;
+      const input   = document.getElementById('email-input');
+      const btn     = form.querySelector('.btn-submit');
+      const errorEl = document.getElementById('form-error');
+      const email   = input.value.trim();
+
+      // Client-side email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errorEl.textContent = 'Please enter a valid email address.';
+        input.focus();
+        return;
+      }
+
+      // Loading state
+      errorEl.textContent = '';
+      btn.textContent = '...';
+      btn.disabled = true;
+
       try {
-        const res  = await fetch('https://api.convertkit.com/v3/forms/65aa1813a8/subscribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ api_key: 'aqaYfs33X9Kwc5fG_0CXug', email })
-        });
+        const res = await fetch(
+          `https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ api_key: KIT_API_KEY, email }),
+          }
+        );
+
         const data = await res.json();
+
         if (res.ok && data.subscription) {
-          document.querySelector('.cta-inner').innerHTML =
-            '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2.4rem;letter-spacing:0.12em;color:var(--saffron);margin-bottom:0.8rem;">YOU\'RE IN.</div>' +
-            '<p style="font-size:1rem;font-weight:600;color:var(--white);line-height:1.8;">I\'ll write from training, from the road.<br/>Everything from day one.</p>';
+          // Show success state
+          form.classList.add('hide');
+          document.getElementById('join-success').classList.add('show');
         } else {
-          btn.textContent = 'TRY AGAIN'; btn.disabled = false;
+          throw new Error('Subscription failed');
         }
       } catch {
-        btn.textContent = 'TRY AGAIN'; btn.disabled = false;
+        errorEl.textContent = 'Something went wrong. Please try again.';
+        btn.textContent = 'COUNT ME IN';
+        btn.disabled = false;
       }
     });
   </script>
