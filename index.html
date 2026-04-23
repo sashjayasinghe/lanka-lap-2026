@@ -263,6 +263,15 @@
       50%       { opacity: 1; }
     }
 
+    /* Accessibility: disable animations for users who prefer it */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
 
     /* ═══════════════════════════════════════════════
        STORY
@@ -480,6 +489,8 @@
     .email-input::placeholder { color: rgba(240,235,227,0.18); }
 
     /* Emil: button needs :active scale for feedback */
+    .email-input { cursor: text; }
+    .donate-line a, .social-row a { cursor: pointer; }
     .btn {
       background: var(--crimson);
       border: none;
