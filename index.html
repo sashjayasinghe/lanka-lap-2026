@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lanka Lap 2026 — Sash Jayasinghe</title>
-  <meta name="description" content="The voice I wish I had. July 1, 2026. 1,400km around Sri Lanka." />
+  <meta name="description" content="Creating the voice I wish I had. July 1, 2026. 1,400km around Sri Lanka." />
   <meta name="google-site-verification" content="PASTE_CODE_HERE" />
   <link rel="sitemap" type="application/xml" href="/lanka-lap-2026/sitemap.xml" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='1' fill='%238D153A' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -18,7 +18,8 @@
       --crimson: #8D153A;
       --saffron: #F5A800;
       --white:   #F0EBE3;
-      --muted:   #4A4250;
+      --muted:   rgba(240,235,227,0.35);
+      --rule:    rgba(141,21,58,0.3);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,14 +32,14 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Vignette */
+    /* Top crimson edge */
     body::before {
       content: '';
       position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, transparent 35%, rgba(0,0,0,0.72) 100%);
-      pointer-events: none;
-      z-index: 0;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--crimson) 30%, var(--crimson) 70%, transparent);
+      z-index: 10;
     }
 
     /* Film grain */
@@ -46,11 +47,19 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
-      opacity: 1;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.09'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 0;
       mix-blend-mode: overlay;
+    }
+
+    /* Vignette */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(0,0,0,0.75) 100%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .page {
@@ -62,92 +71,199 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 2rem 1.5rem;
+      padding: 4rem 1.5rem 3rem;
       gap: 0;
+    }
+
+    /* Label above island */
+    .event-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--saffron);
+      opacity: 0;
+      margin-bottom: 1.6rem;
+      animation: reveal 1s cubic-bezier(0.23,1,0.32,1) 0.2s forwards;
     }
 
     /* Island */
     .island {
-      width: min(130px, 30vw);
+      width: min(150px, 36vw);
       margin-bottom: 2rem;
       overflow: visible;
+      filter: drop-shadow(0 0 40px rgba(141,21,58,0.15));
     }
 
-    #island-fill  { opacity: 0; transition: opacity 1.2s ease 0.4s; }
-    #island-trace { opacity: 0; transition: stroke-dashoffset 2.4s cubic-bezier(0.23,1,0.32,1) 0.3s, opacity 0.4s ease 0.3s; }
+    #island-fill  { opacity: 0; transition: opacity 1.4s ease 0.4s; }
+    #island-trace { opacity: 0; transition: stroke-dashoffset 2.6s cubic-bezier(0.23,1,0.32,1) 0.3s, opacity 0.4s ease 0.3s; }
     #runner       { opacity: 0; transition: opacity 0.4s ease; }
 
     /* Headline */
     .hl {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.6rem, 9vw, 5.5rem);
-      line-height: 0.9;
-      letter-spacing: 0.04em;
+      font-size: clamp(3rem, 10vw, 6.5rem);
+      line-height: 0.88;
+      letter-spacing: 0.03em;
       color: #FFFFFF;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0;
       opacity: 0;
       animation: reveal 1s cubic-bezier(0.23,1,0.32,1) 2.9s forwards;
     }
 
     /* Byline */
     .byline {
-      font-size: clamp(0.6rem, 1.8vw, 0.72rem);
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      color: #FFFFFF;
-      margin-top: 0.5rem;
-      margin-bottom: 1.1rem;
+      font-size: clamp(0.65rem, 1.8vw, 0.75rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-top: 0.7rem;
+      margin-bottom: 2rem;
       opacity: 0;
       animation: reveal 1s cubic-bezier(0.23,1,0.32,1) 3.1s forwards;
     }
 
-    /* Date / distance */
-    .meta {
-      font-size: clamp(0.58rem, 1.8vw, 0.7rem);
-      font-weight: 700;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: #FFFFFF;
-      margin-bottom: 2.2rem;
+    /* Rule */
+    .rule {
+      width: 100%;
+      max-width: 380px;
+      height: 1px;
+      background: var(--rule);
+      margin-bottom: 1.6rem;
+      opacity: 0;
+      animation: reveal 1s cubic-bezier(0.23,1,0.32,1) 3.2s forwards;
+    }
+
+    /* Stats strip */
+    .stats {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 1.6rem;
       opacity: 0;
       animation: reveal 1s cubic-bezier(0.23,1,0.32,1) 3.3s forwards;
     }
-    .meta-dot {
-      display: inline-block;
-      margin: 0 0.8em;
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1.6rem;
+    }
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child  { padding-right: 0; }
+    .stat-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 1.9rem);
+      letter-spacing: 0.04em;
+      color: #FFFFFF;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.52rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+    .stat-divider {
+      width: 1px;
+      height: 2rem;
+      background: var(--rule);
+    }
+
+    /* Countdown */
+    .countdown-wrap {
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: reveal 1s cubic-bezier(0.23,1,0.32,1) 3.5s forwards;
+    }
+    .countdown-label {
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .countdown {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0.15rem;
+    }
+    .cd-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 3.2rem;
+    }
+    .cd-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 6vw, 3rem);
+      color: var(--saffron);
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+    .cd-unit {
+      font-size: 0.48rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(245,168,0,0.45);
+      margin-top: 0.25rem;
+    }
+    .cd-sep {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 6vw, 3rem);
       color: var(--crimson);
-      opacity: 0.6;
+      opacity: 0.4;
+      line-height: 1;
+      padding: 0 0.1rem;
+      align-self: flex-start;
+    }
+
+    /* Rule 2 */
+    .rule2 {
+      width: 100%;
+      max-width: 380px;
+      height: 1px;
+      background: var(--rule);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: reveal 1s cubic-bezier(0.23,1,0.32,1) 3.7s forwards;
     }
 
     /* Access line */
     .access {
-      font-size: clamp(0.65rem, 2vw, 0.75rem);
+      font-size: 0.58rem;
       font-weight: 600;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: #FFFFFF;
-      font-weight: 700;
-      margin-bottom: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
       opacity: 0;
-      animation: reveal 1s cubic-bezier(0.23,1,0.32,1) 3.6s forwards;
+      animation: reveal 1s cubic-bezier(0.23,1,0.32,1) 3.8s forwards;
     }
 
     /* Form */
     .form-wrap {
       width: 100%;
-      max-width: 340px;
+      max-width: 360px;
       opacity: 0;
-      animation: reveal 0.8s cubic-bezier(0.23,1,0.32,1) 3.9s forwards;
+      animation: reveal 0.8s cubic-bezier(0.23,1,0.32,1) 3.95s forwards;
     }
 
     .email-row {
       display: flex;
-      border: 1px solid rgba(141,21,58,0.45);
-      transition: border-color 200ms ease, box-shadow 200ms ease;
+      border: 1px solid rgba(141,21,58,0.35);
+      background: rgba(255,255,255,0.02);
+      transition: border-color 250ms ease, box-shadow 250ms ease;
     }
     .email-row:focus-within {
       border-color: var(--saffron);
-      box-shadow: 0 0 0 3px rgba(245,168,0,0.08);
+      box-shadow: 0 0 0 3px rgba(245,168,0,0.07);
     }
 
     .email-input {
@@ -156,22 +272,22 @@
       border: none;
       color: var(--white);
       font-family: 'Source Sans 3', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 400;
+      padding: 1rem 1.1rem;
       outline: none;
       cursor: text;
     }
-    .email-input::placeholder { color: rgba(240,235,227,0.18); }
+    .email-input::placeholder { color: rgba(240,235,227,0.15); }
 
     .btn {
       background: var(--crimson);
       border: none;
       color: var(--white);
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 0.95rem;
-      letter-spacing: 0.18em;
-      padding: 0 1.4rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      padding: 0 1.5rem;
       cursor: pointer;
       white-space: nowrap;
       transition: background 200ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1);
@@ -181,9 +297,18 @@
     .btn:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
     .btn:disabled      { opacity: 0.4; cursor: not-allowed; transform: none; }
 
+    .form-note {
+      font-size: 0.52rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: rgba(240,235,227,0.2);
+      margin-top: 0.7rem;
+      text-transform: uppercase;
+    }
+
     .form-error {
-      font-size: 0.65rem;
-      font-weight: 700;
+      font-size: 0.6rem;
+      font-weight: 600;
       color: #E87722;
       min-height: 1rem;
       margin-top: 0.5rem;
@@ -196,19 +321,21 @@
 
     .success-hl {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 2rem;
+      font-size: 2.2rem;
       color: var(--saffron);
-      margin-bottom: 0.3rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.4rem;
     }
     .success-sub {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--white);
-      line-height: 1.7;
+      font-size: 0.8rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.8;
     }
 
     @keyframes reveal {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -220,17 +347,22 @@
     }
 
     @media (max-width: 420px) {
-      .island { margin-bottom: 1.6rem; }
-      .hl { margin-bottom: 0.9rem; }
-      .meta { margin-bottom: 1.8rem; }
+      .page { padding: 3rem 1.25rem 2rem; }
+      .island { margin-bottom: 1.4rem; }
+      .stat { padding: 0 1rem; }
       .email-row { flex-direction: column; }
-      .btn { padding: 0.85rem; width: 100%; }
+      .btn { padding: 0.9rem; width: 100%; }
+      .cd-block { min-width: 2.6rem; }
     }
   </style>
 </head>
 <body>
 
+<div class="vignette"></div>
+
 <div class="page">
+
+  <p class="event-label">Lanka Lap 2026</p>
 
   <svg class="island" viewBox="0 0 180 256" aria-hidden="true" overflow="visible">
     <defs>
@@ -241,11 +373,11 @@
       </radialGradient>
       <filter id="coast-glow" x="-60%" y="-60%" width="220%" height="220%">
         <feGaussianBlur in="SourceGraphic" stdDeviation="3"  result="b1"/>
-        <feGaussianBlur in="SourceGraphic" stdDeviation="9"  result="b2"/>
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b2"/>
         <feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
       <filter id="dot-glow" x="-300%" y="-300%" width="700%" height="700%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"/>
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="b"/>
         <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
@@ -264,13 +396,53 @@
   <h1 class="hl">"Creating the voice<br/>I wish I had"</h1>
   <p class="byline">— Sash Jayasinghe</p>
 
-  <p class="meta">
-    July 1, 2026
-    <span class="meta-dot">·</span>
-    1,400 km
-  </p>
+  <div class="rule"></div>
 
-  <p class="access">Get behind the scenes access</p>
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-value">1,400</span>
+      <span class="stat-label">km</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-value">30</span>
+      <span class="stat-label">days</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-value">45</span>
+      <span class="stat-label">km / day</span>
+    </div>
+  </div>
+
+  <div class="countdown-wrap">
+    <p class="countdown-label">Until the run begins</p>
+    <div class="countdown">
+      <div class="cd-block">
+        <span class="cd-num" id="cd-d">--</span>
+        <span class="cd-unit">days</span>
+      </div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block">
+        <span class="cd-num" id="cd-h">--</span>
+        <span class="cd-unit">hrs</span>
+      </div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block">
+        <span class="cd-num" id="cd-m">--</span>
+        <span class="cd-unit">min</span>
+      </div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block">
+        <span class="cd-num" id="cd-s">--</span>
+        <span class="cd-unit">sec</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule2"></div>
+
+  <p class="access">Dispatches from the road — follow from the inside</p>
 
   <div class="form-wrap">
     <form id="form" novalidate>
@@ -283,6 +455,7 @@
         </div>
       </div>
       <p class="form-error" id="err" aria-live="polite"></p>
+      <p class="form-note">No noise. Real dispatches only.</p>
     </form>
 
     <div class="success" id="success">
@@ -311,7 +484,7 @@
     });
   });
 
-  /* Runner — starts after trace completes */
+  /* Runner */
   let rafStart = null;
   const LAP = 7000;
 
@@ -326,6 +499,34 @@
   }
 
   setTimeout(() => requestAnimationFrame(step), 2800);
+
+  /* Countdown to July 1, 2026 00:00:00 Sri Lanka time (UTC+5:30) */
+  const TARGET = new Date('2026-07-01T00:00:00+05:30').getTime();
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    const now  = Date.now();
+    const diff = TARGET - now;
+    if (diff <= 0) {
+      document.getElementById('cd-d').textContent = '00';
+      document.getElementById('cd-h').textContent = '00';
+      document.getElementById('cd-m').textContent = '00';
+      document.getElementById('cd-s').textContent = '00';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000)  / 60000);
+    const s = Math.floor((diff % 60000)    / 1000);
+    document.getElementById('cd-d').textContent = pad(d);
+    document.getElementById('cd-h').textContent = pad(h);
+    document.getElementById('cd-m').textContent = pad(m);
+    document.getElementById('cd-s').textContent = pad(s);
+  }
+
+  tick();
+  setInterval(tick, 1000);
 
   /* Form */
   document.getElementById('form').addEventListener('submit', async e => {
